@@ -2,14 +2,9 @@ import moment from 'moment';
 moment.locale(chrome.i18n.getUILanguage());
 import state from './stores/state';
 
-if (!state.isOptions) {
-  let startupP: HTMLElement = document.querySelector('.startup-text-wrapper > .startup-p');
-
-  if (startupP) startupP.innerText = moment().format('h:mm A');
-}
-
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
+import {browser} from 'webextension-polyfill-ts';
 import {assignIn} from 'lodash';
 import v from 'vquery';
 import {each, filter, tryFn} from '@jaszhix/utils';
@@ -135,6 +130,10 @@ class Root extends React.Component<RootProps, RootState> {
         folder: (partial) => {
           state.set(this.updateTabState(partial.folder, 'folder', partial));
         },
+        groupFilter: (partial) => {
+          browser.storage.local.set({groupFilter: partial.groupFilter});
+          state.set(this.updateGroupFilterState(partial.groupFilter));
+        },
         applyTabOrder: (partial) => {
           if (!partial.applyTabOrder) return;
 
@@ -166,7 +165,13 @@ class Root extends React.Component<RootProps, RootState> {
   }
 
   init = (p) => {
-    getWindowId().then(() => {
+    getWindowId().then(async () => {
+      let stored = await browser.storage.local.get('groupFilter');
+
+      if (typeof stored.groupFilter === 'number') {
+        state.set({groupFilter: stored.groupFilter});
+      }
+
       if (p.s.prefs.sessionsSync) getSessions();
 
       getTabs(true);
@@ -221,6 +226,24 @@ class Root extends React.Component<RootProps, RootState> {
     if (p.s.prefs.mode !== 'tabs' && p.s.prefs.mode !== 'sessions') {
       handleMode(p.s.prefs.mode);
     }
+  }
+
+  updateGroupFilterState = (groupId: number | false): Partial<GlobalState> => {
+    let p = this.props;
+
+    if (groupId) {
+      return {
+        [p.s.modeKey]: filter(p.s[p.s.modeKey] as ChromeItem[], (item: ChromeItem) => item.groupId === groupId),
+        groupFilterCache: p.s[p.s.modeKey] as ChromeItem[],
+      };
+    }
+
+    getTabs();
+
+    return {
+      [p.s.modeKey]: p.s.groupFilterCache || p.s[p.s.modeKey],
+      groupFilterCache: null,
+    };
   }
 
   render = () => {

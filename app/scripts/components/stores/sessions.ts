@@ -80,7 +80,7 @@ export const exportSessions = async (_sessions) => {
   // Stringify sessionData and export as JSON.
   let sessions = await cleanSessions(_sessions);
   let json = JSON.stringify(sessions);
-  let filename = `TM5K-Sessions-${Date.now()}.json`;
+  let filename = `TM8K-Sessions-${Date.now()}.json`;
   let blob = new Blob([json], {type: 'application/json;charset=utf-8'});
 
   await browser.downloads.download({

@@ -5,6 +5,7 @@ import v from 'vquery';
 import mouseTrap from 'mousetrap';
 import {find, tryFn, each, filter} from '@jaszhix/utils';
 
+import {getFavoritesUrl} from '../../shared/utils';
 import {saveSession} from './sessions';
 import {themeStore} from './theme';
 import state from './state';
@@ -101,6 +102,15 @@ export const queryExtensions = () => {
 
 export const setMode = (mode: ViewMode, stateUpdate = {}) => {
   _.assignIn(stateUpdate, {modeKey: mode === 'sessions' ? 'sessionTabs' : mode});
+
+  if (mode !== 'tabs' && state.groupFilter) {
+    _.assignIn(stateUpdate, {
+      groupFilter: false,
+      groupFilterCache: null,
+      tabs: state.groupFilterCache || state.tabs,
+    });
+  }
+
   state.set(stateUpdate);
   setPrefs(<PreferencesState>{mode: mode});
 };
@@ -111,6 +121,16 @@ const handleMessage = function(
   sender: chrome.runtime.MessageSender,
   sendResponse: (response?: any) => void,
 ) {
+  if (msg.type === 'focusSearchEntry') {
+    // Nur die sichtbare New-Tab-Instanz soll den Fokus übernehmen
+    if (document.visibilityState === 'visible') {
+      state.set({modal: {state: false, type: 'settings'}});
+      state.trigger('focusSearchEntry');
+    }
+
+    return;
+  }
+
   if (process.env.NODE_ENV === 'development') {
     switch (msg.type) {
       case 'error': {
@@ -262,8 +282,8 @@ export const handleMode = async (mode: ViewMode, stateUpdate: Partial<GlobalStat
     case 'bookmarks':
       // Chrome only allows interacting with the chrome.permissions* API with a user gesture,
       // including the function that calls back with a boolean if we have a permission.
-      // This makes it difficult to handle extension reloads, where TM5K likes to load
-      // a new tab page if one was already open, to restore it. For now TM5K tracks permissions
+      // This makes it difficult to handle extension reloads, where TM8K likes to load
+      // a new tab page if one was already open, to restore it. For now TM8K tracks permissions
       // granted manually, and resets prefs based on those values any time prefs are updated.
       if (userGesture) {
         let granted = await requestPermission('bookmarks');
@@ -304,6 +324,10 @@ export const handleMode = async (mode: ViewMode, stateUpdate: Partial<GlobalStat
   setMode(mode, stateUpdate);
 };
 
+export const openFavorites = () => {
+  chrome.tabs.create({url: getFavoritesUrl(state.get('prefs'))});
+};
+
 export const setKeyBindings = (s: GlobalState) => {
   mouseTrap.bind('ctrl+z', () => {
     if (s.prefs.actions) {
@@ -314,6 +338,10 @@ export const setKeyBindings = (s: GlobalState) => {
     e.preventDefault();
     state.set({modal: {state: false, type: 'settings'}});
     state.trigger('focusSearchEntry');
+  });
+  mouseTrap.bind('ctrl+d', (e) => {
+    e.preventDefault();
+    openFavorites();
   });
   mouseTrap.bind('ctrl+alt+s', (e) => {
     e.preventDefault();

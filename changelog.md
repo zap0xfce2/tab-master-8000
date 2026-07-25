@@ -1,5 +1,9 @@
 #### Release Notes
 
+##### Tab Master 8000
+
+* This is the Tab Master 8000 fork, maintained at [zap0xfce2/tab-master-8000](https://github.com/zap0xfce2/tab-master-8000). The release notes below document the history of the original Tab Master 5000 project.
+
 ##### v2.11.0 / *5-30-24*
 
 * New zh-CN translation added by YFdyh000.

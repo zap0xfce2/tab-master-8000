@@ -266,9 +266,9 @@ class TableHeader extends React.Component<TableHeaderProps> {
       }
     }
 
-    // Should only fail to get the correct widths if TM5K is not the active tab, so retry until
-    // it's active again. This occurs when TM5K is enabled while previous new tabs are open,
-    // or the user reloads TM5K and navigates to another tab.
+    // Should only fail to get the correct widths if TM8K is not the active tab, so retry until
+    // it's active again. This occurs when TM8K is enabled while previous new tabs are open,
+    // or the user reloads TM8K and navigates to another tab.
     if (successCount !== elements.length) {
       setTimeout(() => this.handleResizeObserverEntries(elements), 500);
     }

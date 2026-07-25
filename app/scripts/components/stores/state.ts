@@ -33,6 +33,8 @@ const state: GlobalState = init({
     footer: null
   },
   folder: null,
+  groupFilter: null,
+  groupFilterCache: null,
   alert: {
     text: '',
     tag: 'alert-success',

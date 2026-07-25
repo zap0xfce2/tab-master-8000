@@ -271,7 +271,7 @@ class Attribution extends React.Component<AttributionProps, AttributionState> {
 }
 
 interface ReleaseNotesProps {
-  tm5kLogo: string;
+  tm8kLogo: string;
 }
 
 interface ReleaseNotesState {
@@ -297,11 +297,11 @@ class ReleaseNotes extends React.Component<ReleaseNotesProps, ReleaseNotesState>
   };
 
   render() {
-    let {tm5kLogo} = this.props;
+    let {tm8kLogo} = this.props;
 
     return (
       <div>
-        <img className="ntg-about" style={{top: '20px'}} src={tm5kLogo} />
+        <img className="ntg-about" style={{top: '20px'}} src={tm8kLogo} />
         <Link href="https://eff.org" target="_blank">
           <img style={{position: 'absolute', top: '50px', right:'8%', height: '120px', opacity: '0.7'}} src="../../images/eff-member-badge-2024.png" />
         </Link>
@@ -344,7 +344,7 @@ class About extends React.Component<AboutProps, AboutState> {
     p.modal.footer = (
       <div>
         <Btn
-          onClick={() => chrome.tabs.create({url: 'https://github.com/jaszhix/tab-master-5000-extension'})}
+          onClick={() => chrome.tabs.create({url: 'https://github.com/zap0xfce2/tab-master-8000'})}
           className="settingBtn"
           icon="github">
           Github
@@ -371,7 +371,7 @@ class About extends React.Component<AboutProps, AboutState> {
   render() {
     let p = this.props;
     let s = this.state;
-    let tm5kLogo = `../../images/icon-128${tc(p.theme.settingsBg).isDark() ? '-light' : ''}.png`
+    let tm8kLogo = `../../images/icon-128${tc(p.theme.settingsBg).isDark() ? '-light' : ''}.png`
 
     return (
       <div>
@@ -395,7 +395,7 @@ class About extends React.Component<AboutProps, AboutState> {
           </ul>
         </Row>
         <Col size="12" className="about">
-          {s.tab === 'release' ? <ReleaseNotes tm5kLogo={tm5kLogo} /> : null}
+          {s.tab === 'release' ? <ReleaseNotes tm8kLogo={tm8kLogo} /> : null}
           {s.tab === 'support' ? <Support /> : null}
           {s.tab === 'attribution' ? <Attribution /> : null}
           {s.tab === 'contribute' ? <Contribute chromeVersion={p.chromeVersion} /> : null}

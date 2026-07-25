@@ -804,7 +804,7 @@ const themeStore = <ThemeStore>init({
     if (!granted) return;
 
     let json = JSON.stringify(themeStore.savedThemes);
-    let filename = `TM5K-Themes-${Date.now()}.json`;
+    let filename = `TM8K-Themes-${Date.now()}.json`;
     let blob = new Blob([json], {type: "application/json;charset=utf-8"});
 
     await browser.downloads.download({
@@ -1012,11 +1012,9 @@ const onThemeChange = (e: ThemeChangeParams) => {
     .form-control:not(.settings) {
       color: ${bodyColor90};
       border-bottom-color: ${theme.textFieldsBorder};
-      box-shadow: 0 1px 0 ${theme.textFieldsBorder};
     }
     .form-control:not(.settings):focus {
       border-bottom-color: ${theme.textFieldsBg};
-      box-shadow: 0 1px 0 ${theme.textFieldsBg};
     }
     .form-control.settings::-${inputPlaceholder}-placeholder {
       color: ${bodyColor90};

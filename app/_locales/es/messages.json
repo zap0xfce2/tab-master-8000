@@ -1,9 +1,9 @@
 {
   "appName": {
-    "message": "Tab Master 5000"
+    "message": "Tab Master 8000"
   },
   "appDesc": {
-    "message": "El cuchillo del ejército suizo de la tabulación, de la historia, de la señal, de la sesión, y de la gerencia de extensión."
+    "message": "El cuchillo del ejército suizo de la tabulación, de la historia, de la señal, de la sesión, y de la gerencia de extensión. m0dded by Zap0xfce2"
   },
   "hi": {
     "message": "Hola"
@@ -153,10 +153,7 @@
     "message": "movimiento de"
   },
   "pressEnterToSearch": {
-    "message": "Pulse Intro para buscar"
-  },
-  "google": {
-    "message": "Google"
+    "message": "Pulse Intro para abrir el primer resultado"
   },
   "newVersionAvailable": {
     "message": "Nueva versión disponible"
@@ -164,14 +161,17 @@
   "updatedTo": {
     "message": "Actualizado a"
   },
-  "thankYouForInstallingTM5K": {
-    "message": "Gracias por instalar TM5K"
+  "thankYouForInstallingTM8K": {
+    "message": "Gracias por instalar TM8K"
   },
   "downloadingAndCachingFavicons": {
     "message": "Descarga y almacenamiento en caché de favicons..."
   },
   "search": {
     "message": "Buscar"
+  },
+  "openFavorites": {
+    "message": "Abrir favoritos"
   },
   "resetData": {
     "message": "El restablecimiento borrará todos los datos. Por favor, haga una copia de seguridad de sus sesiones y temas antes de comenzar."
@@ -293,6 +293,18 @@
   "newTabOverrideOption2": {
     "message": "Personalizada"
   },
+  "favoritesBtn": {
+    "message": "Botón de favoritos"
+  },
+  "favoritesBtnTip": {
+    "message": "Controla qué página abre el botón de estrella en la esquina superior derecha."
+  },
+  "favoritesBtnOption1": {
+    "message": "Predeterminado"
+  },
+  "favoritesBtnOption2": {
+    "message": "URL personalizada"
+  },
   "enableContextMenu": {
     "message": "Habilitar menú contextual"
   },
@@ -315,7 +327,7 @@
     "message": "Cerrar nueva pestaña en la activación de la pestaña"
   },
   "closeOnActivateTip": {
-    "message": "Elija si TM5K está cerrado al hacer clic en un mosaico o fila de pestañas."
+    "message": "Elija si TM8K está cerrado al hacer clic en un mosaico o fila de pestañas."
   },
   "allTabs": {
     "message": "Mostrar pestañas en todas las ventanas"
@@ -329,11 +341,20 @@
   "trackMostUsedTip": {
     "message": "Mantiene un registro de cuántas veces se activa una pestaña, lo que habilita un modo de clasificación opcional."
   },
+  "showTabGroupBadge": {
+    "message": "Mostrar insignia de color de grupo de pestañas"
+  },
+  "showTabGroupBadgeTip": {
+    "message": "Marca cada miniatura con el color de su grupo de pestañas nativo de Chrome y permite hacer clic para filtrar la vista a ese grupo."
+  },
+  "unnamedTabGroup": {
+    "message": "Grupo sin nombre"
+  },
   "autoDiscard": {
     "message": "Habilitar el descarte automático de pestañas de la memoria"
   },
   "autoDiscardTip": {
-    "message": "Esta opción permite a TM5K borrar automáticamente las pestañas de la memoria después de haber estado inactivas durante un período de tiempo determinado. Al borrar las pestañas de la memoria no se cierran las pestañas, pero Chrome tendrá que volver a cargarlas tras la activación."
+    "message": "Esta opción permite a TM8K borrar automáticamente las pestañas de la memoria después de haber estado inactivas durante un período de tiempo determinado. Al borrar las pestañas de la memoria no se cierran las pestañas, pero Chrome tendrá que volver a cargarlas tras la activación."
   },
   "autoDiscardClearTime": {
     "message": "Borrar las pestañas de la memoria si está inactiva para"
@@ -389,12 +410,6 @@
   "alertsTip": {
     "message": "Cambia las notificaciones que aparecen en la esquina inferior derecha de la pantalla."
   },
-  "errorTelemetry": {
-    "message": "Habilitar informes de errores anónimos"
-  },
-  "errorTelemetryTip": {
-    "message": "Mantener esto habilitado ayuda a mejorar TM5K. Cuando se produce un error en el código, los datos de configuración de su navegador, sistema operativo, IP y TM5K (excluida la lista negra) se envían a Sentry junto con un seguimiento de pila, para que los desarrolladores puedan identificar el error y aplicarle un parche para la próxima versión."
-  },
   "screenshotBgOpacity": {
     "message": "Establecer la opacidad de la imagen de fondo"
   },
@@ -435,7 +450,7 @@
     "message": "Habilitar el almacenamiento en caché de favicon"
   },
   "faviconCachingTip": {
-    "message": "Cuando está habilitado, TM5K almacena favicons en el disco para limitar las descargas de imágenes y garantizar que los favicons se muestren cuando no hay conectividad a Internet."
+    "message": "Cuando está habilitado, TM8K almacena favicons en el disco para limitar las descargas de imágenes y garantizar que los favicons se muestren cuando no hay conectividad a Internet."
   },
   "actions": {
     "message": "Habilitar deshacer las acciones de pestaña"
@@ -584,8 +599,8 @@
   "custom": {
     "message": "Personalizado"
   },
-  "tm5k": {
-    "message": "TM5K"
+  "tm8k": {
+    "message": "TM8K"
   },
   "colorScheme": {
     "message": "Esquema de colores"
@@ -729,7 +744,7 @@
     "message": "Atribución"
   },
   "attributionHeader": {
-    "message": "TM5K fue posible gracias a los esfuerzos de los siguientes proyectos."
+    "message": "TM8K fue posible gracias a los esfuerzos de los siguientes proyectos."
   },
   "attributionFooter": {
     "message": "Los fondos de pantalla incluidos están"

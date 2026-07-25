@@ -250,7 +250,7 @@ class ItemsContainer extends React.Component<ItemsContainerProps, ItemContainerS
 
   render = () => {
     let {s, theme, wallpaper} = this.props;
-    let {prefs, height, modeKey, context, folder, chromeVersion} = s;
+    let {prefs, height, modeKey, context, folder, groupFilter, chromeVersion} = s;
     let isTileView = prefs.format === 'tile';
     let draggable = prefs.mode === 'tabs' && prefs.drag;
     let navOffset = 77;
@@ -321,6 +321,7 @@ class ItemsContainer extends React.Component<ItemsContainerProps, ItemContainerS
               wallpaper={wallpaper}
               context={context}
               folder={folder}
+              groupFilter={groupFilter}
               chromeVersion={chromeVersion}
               tileLetterTopPos={tileLetterTopPos}
             />

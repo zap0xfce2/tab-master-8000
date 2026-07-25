@@ -9,7 +9,7 @@ import Slider from 'rc-slider';
 import ReactTooltip from 'react-tooltip';
 
 import * as utils from '../stores/tileUtils';
-import {urlRegex} from '../../shared/constants';
+import {urlRegex, extensionUrlRegex} from '../../shared/constants';
 import state from '../stores/state';
 import {requestPermission, setPrefs, getBlackList, setBlackList, isValidDomain, getBytesInUse, restoreDefaultPrefs} from '../stores/main';
 
@@ -25,9 +25,14 @@ const styles = StyleSheet.create({
 });
 
 const newTabOverrideOptions = [
-  {value: 'tm5k', label: 'Tab Master'},
+  {value: 'tm8k', label: 'Tab Master'},
   {value: 'default', label: utils.t('newTabOverrideOption1')},
   {value: 'custom', label: utils.t('newTabOverrideOption2')}
+];
+
+const favoritesBtnOptions = [
+  {value: 'default', label: utils.t('favoritesBtnOption1')},
+  {value: 'custom', label: utils.t('favoritesBtnOption2')}
 ];
 
 // TBD: Migrate commands to manifest.json
@@ -383,6 +388,8 @@ export interface PreferencesComponentState {
   aboutAddonsOpen?: boolean;
   newTabCustom?: string;
   newTabCustomValid?: boolean;
+  favoritesBtnCustom?: string;
+  favoritesBtnCustomValid?: boolean;
   commandsInfo: string;
   restoreDefaultsConfirm: boolean;
 }
@@ -401,6 +408,8 @@ class Preferences extends React.Component<PreferencesComponentProps, Preferences
       aboutAddonsOpen: false,
       newTabCustom: props.prefs.newTabCustom,
       newTabCustomValid: true,
+      favoritesBtnCustom: props.prefs.favoritesBtnCustom,
+      favoritesBtnCustomValid: true,
       commandsInfo: '',
       restoreDefaultsConfirm: false,
     }
@@ -522,10 +531,6 @@ class Preferences extends React.Component<PreferencesComponentProps, Preferences
     obj[opt] = !prefs[opt];
 
     setPrefs(obj as PreferencesState);
-
-    if (opt === 'errorTelemetry') {
-      window.location.reload();
-    }
   }
 
   handleFaviconCachingChange = async (opt) => {
@@ -572,6 +577,23 @@ class Preferences extends React.Component<PreferencesComponentProps, Preferences
       newTabCustomValid: isValidURL,
     }, async () => {
       if (isValidURL) setPrefs({newTabCustom: value});
+    });
+  }
+
+  handleFavoritesBtnModeChange = (e) => {
+    setPrefs({favoritesBtnMode: e.target.value});
+  }
+
+  handleFavoritesBtnCustomChange = (e) => {
+    let {value} = e.target;
+
+    let isValidURL = value.match(urlRegex) != null || value.match(extensionUrlRegex) != null;
+
+    this.setState({
+      favoritesBtnCustom: value.trim(),
+      favoritesBtnCustomValid: isValidURL,
+    }, async () => {
+      if (isValidURL) setPrefs({favoritesBtnCustom: value});
     });
   }
 
@@ -632,6 +654,32 @@ class Preferences extends React.Component<PreferencesComponentProps, Preferences
                 </>
               : null}
             </Dropdown>
+            <Dropdown
+              theme={p.theme}
+              label={utils.t('favoritesBtn')}
+              options={favoritesBtnOptions}
+              value={p.prefs.favoritesBtnMode}
+              onChange={this.handleFavoritesBtnModeChange}
+              data-tip={utils.t('favoritesBtnTip')}>
+              {p.prefs.favoritesBtnMode === 'custom' ?
+                <>
+                  <input
+                    type="url"
+                    className="form-control settings"
+                    placeholder="https://"
+                    value={s.favoritesBtnCustom}
+                    onChange={this.handleFavoritesBtnCustomChange}
+                  />
+                  {s.favoritesBtnCustom.length ?
+                    <span
+                      style={p.prefs.settingsMax ? {left: '98%'} : null}
+                      className={`newTabOverrideValidation validation-${s.favoritesBtnCustomValid ? 'valid' : 'error'}-label`}>
+                      {' '}
+                    </span>
+                  : null}
+                </>
+              : null}
+            </Dropdown>
             <Toggle
               onClick={() => this.handleClick('context')}
               on={p.prefs.context}
@@ -667,6 +715,12 @@ class Preferences extends React.Component<PreferencesComponentProps, Preferences
               on={p.prefs.trackMostUsed}
               label={`${utils.t('trackMostUsed')} (BETA)`}
               data-tip={utils.t('trackMostUsedTip')}
+            />
+            <Toggle
+              onClick={() => this.handleClick('showTabGroupBadge')}
+              on={p.prefs.showTabGroupBadge}
+              label={utils.t('showTabGroupBadge')}
+              data-tip={utils.t('showTabGroupBadgeTip')}
             />
             {p.chromeVersion >= 54?
               <Toggle
@@ -713,12 +767,6 @@ class Preferences extends React.Component<PreferencesComponentProps, Preferences
               on={p.prefs.alerts}
               label={utils.t('alerts')}
               data-tip={utils.t('alertsTip')}
-            />
-            <Toggle
-              onClick={() => this.handleClick('errorTelemetry')}
-              on={p.prefs.errorTelemetry}
-              label={utils.t('errorTelemetry')}
-              data-tip={utils.t('errorTelemetryTip')}
             />
           </Col>
           <Col size="6">

@@ -9,15 +9,15 @@ import {sendError, sendLog} from './utils';
 let basePrefs: Partial<PreferencesState> = {
   autoDiscard: false,
   autoDiscardTime: 3600000,
-  tabSizeHeight: 134,
+  tabSizeHeight: 175,
   settingsMax: false,
   drag: true,
   context: true,
   animations: true,
   duplicate: true,
   screenshotBg: false,
-  screenshotBgBlur: 5,
-  screenshotBgOpacity: 5,
+  screenshotBgBlur: 3,
+  screenshotBgOpacity: 10,
   faviconCaching: false,
   blacklist: true,
   sidebar: true,
@@ -28,24 +28,26 @@ let basePrefs: Partial<PreferencesState> = {
   installTime: Date.now(),
   actions: false,
   trackMostUsed: false,
-  singleNewTab: false,
-  closeOnActivate: false,
+  singleNewTab: true,
+  closeOnActivate: true,
   keyboardShortcuts: true,
   resolutionWarning: true,
   syncedSession: true,
-  tooltip: true,
-  allTabs: false,
+  tooltip: false,
+  allTabs: true,
   resetSearchOnClick: true,
-  tablePadding: 5,
-  errorTelemetry: false,
-  newTabMode: 'tm5k',
+  tablePadding: 10,
+  newTabMode: 'tm8k',
   newTabCustom: '',
+  showTabGroupBadge: true,
+  favoritesBtnMode: 'default',
+  favoritesBtnCustom: '',
 };
 
 let baseThemePrefs: Partial<PreferencesState> = {
   theme: 9001,
   wallpaper: null,
-  alerts: true,
+  alerts: false,
   sessionsSync: false,
   currentSyncedSession: '',
 };
@@ -83,6 +85,20 @@ let prefsStore = <PreferencesStore>init({
         prefs[key] = prefsStore.defaultPrefs[key];
       }
     });
+
+    // Fork-Migration (TM5K -> TM8K): der Backfill oben ersetzt nur undefined-Keys
+    // und persistiert nie, ein umbenannter *Wert* braucht daher einen expliziten Rewrite.
+    if ((prefs.newTabMode as string) === 'tm5k') {
+      prefs.newTabMode = 'tm8k';
+
+      try {
+        await browser.storage.sync.set({
+          preferences: pick(prefs, Object.keys(basePrefs)),
+        });
+      } catch (e) {
+        sendError(e);
+      }
+    }
 
     prefsStore.syncPermissions();
     prefsStore.checkPermissions(prefs);

@@ -160,7 +160,7 @@ class Permissions extends React.Component<PermissionsProps, PermissionsState> {
           </Row>
         </Col>
         <Col size="6">
-          <h4 data-tip={`<div style="max-width: 400px;">Matching URL patterns of websites TM5K is allowed to read and change data from. This is used for caching favicons for later use. Limiting the origin scope will result in the extension redownloading website favicons.</div>`}>Origins</h4>
+          <h4 data-tip={`<div style="max-width: 400px;">Matching URL patterns of websites TM8K is allowed to read and change data from. This is used for caching favicons for later use. Limiting the origin scope will result in the extension redownloading website favicons.</div>`}>Origins</h4>
           <Row>
             <Toggle
               dataId="<all_urls>"

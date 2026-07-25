@@ -84,7 +84,11 @@ declare global {
     originSession?: string;
     folder?: string;
     favIconUrl?: string;
+    thumbnailUrl?: string;
     originWindow?: number;
+    groupColor?: chrome.tabGroups.Color;
+    groupTitle?: string;
+    groupCollapsed?: boolean;
   }
 
   type ChromeGeneric = ChromeGenericCustom<number | string, number | string>
@@ -104,7 +108,7 @@ declare global {
   }
 
   type ViewMode = 'tabs' | 'sessions' | 'bookmarks' | 'history' | 'apps' | 'extensions';
-  type ViewModeKey = 'tabs' | 'sessionTabs' | 'bookmarks' | 'history' | 'apps' | 'extensions';
+  type ViewModeKey = 'tabs' | 'sessionTabs' | 'bookmarks' | 'history' | 'apps' | 'extensions' | 'searchCache';
   type ViewFormat = 'tile' | 'table';
   type SortKey = 'index' | 'url' | 'title' | 'timeStamp' | 'sTimeStamp' | 'openTab' | 'label' | 'folder'
     | 'domain' | 'folder' | 'dateAdded' | 'pinned' | 'mutedInfo' | 'count' | 'session'
@@ -248,9 +252,11 @@ declare global {
     allTabs: boolean;
     resetSearchOnClick: boolean;
     tablePadding: number;
-    errorTelemetry: boolean;
-    newTabMode: 'tm5k' | 'default' | 'custom';
+    newTabMode: 'tm8k' | 'default' | 'custom';
     newTabCustom: string;
+    showTabGroupBadge: boolean;
+    favoritesBtnMode: 'default' | 'custom';
+    favoritesBtnCustom: string;
   }
 
   interface PermissionsState {
@@ -346,6 +352,8 @@ declare global {
     settings?: 'preferences' | 'sessions' | 'theming' | 'about';
     modal?: ModalState;
     folder?: string;
+    groupFilter?: number | false;
+    groupFilterCache?: ChromeItem[] | null;
     alert?: AlertState;
     dragging?: boolean;
     topLoad?: boolean;
@@ -399,7 +407,7 @@ declare global {
   interface BgMessage {
     e: any;
     args: any[];
-    type: 'startup' | 'appState' | 'prefs' | 'error' | 'log';
+    type: 'startup' | 'appState' | 'prefs' | 'error' | 'log' | 'focusSearchEntry';
     action: boolean | 'newVersion' | 'installed' | 'versionUpdate';
     noPermissions: 'bookmarks' | 'history' | 'management';
     sessions?: SessionState[];
@@ -421,6 +429,7 @@ declare global {
     history: ChromeHistoryItem[];
     bookmarks: ChromeBookmarkTreeNode[];
     extensions: ChromeExtensionInfo[];
+    tabGroups: chrome.tabGroups.TabGroup[];
     removed: ChromeTab[];
     newTabs: TabIDInfo[];
     sessions: SessionState[];
@@ -477,4 +486,51 @@ declare global {
   }
 
   type BtnOnClick = (e?: React.MouseEvent | Element | string) => void | Promise<void> | State.Data;
+
+  // @types/chrome is older than the chrome.storage.session API, and only has the legacy
+  // callback-based StorageArea signatures — add the promise-based overloads MV3 actually
+  // supports when the callback is omitted.
+  namespace chrome.storage {
+    export interface StorageArea {
+      get(keys?: string | string[] | Object | null): Promise<{[key: string]: any}>;
+      set(items: Object): Promise<void>;
+      remove(keys: string | string[]): Promise<void>;
+    }
+
+    export var session: StorageArea;
+  }
+
+  // Same story for chrome.tabs.captureVisibleTab — @types/chrome only has the callback overloads.
+  // groupId is likewise missing from the Tab interface here (chrome.tabGroups landed after Chrome 89).
+  namespace chrome.tabs {
+    export function captureVisibleTab(windowId: number, options: CaptureVisibleTabOptions): Promise<string>;
+
+    export interface Tab {
+      groupId?: number;
+    }
+  }
+
+  // chrome.tabGroups is entirely absent from @types/chrome 0.0.116 — declared from scratch here,
+  // following the same declaration-merging approach as chrome.storage.session above.
+  namespace chrome.tabGroups {
+    export type Color = 'grey' | 'blue' | 'red' | 'yellow' | 'green' | 'pink' | 'purple' | 'cyan' | 'orange';
+
+    export interface TabGroup {
+      id: number;
+      collapsed: boolean;
+      color: Color;
+      title?: string;
+      windowId: number;
+    }
+
+    export const TAB_GROUP_ID_NONE: number;
+
+    export function query(queryInfo: {collapsed?: boolean; color?: Color; title?: string; windowId?: number}): Promise<TabGroup[]>;
+    export function get(groupId: number): Promise<TabGroup>;
+
+    export const onCreated: chrome.events.Event<(group: TabGroup) => void>;
+    export const onUpdated: chrome.events.Event<(group: TabGroup) => void>;
+    export const onMoved: chrome.events.Event<(group: TabGroup) => void>;
+    export const onRemoved: chrome.events.Event<(group: TabGroup) => void>;
+  }
 }

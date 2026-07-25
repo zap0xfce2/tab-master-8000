@@ -1,4 +1,4 @@
-Si tienes una pregunta que no se puede responder aquí, abre un nuevo problema en la [Chrome Web Store](https://chrome.google.com/webstore/detail/tab-master-5000-tab-swiss/mippmhcfjhliihkkdobllhpdnmmciaim) o en la página [Github](https://github.com/jaszhix/tab-master-5000-chrome-extension/issues) de TM5K.
+Si tienes una pregunta que no se puede responder aquí, abre un nuevo problema en la [Chrome Web Store](https://chrome.google.com/webstore/detail/tab-master-5000-tab-swiss/mippmhcfjhliihkkdobllhpdnmmciaim) o en la página [Github](https://github.com/zap0xfce2/tab-master-8000/issues) de TM8K.
 
 ### Preguntas más frecuentes
 

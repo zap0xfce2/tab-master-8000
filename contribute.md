@@ -1,4 +1,4 @@
-Tab Master 5000 is free of cost and doesn't generate any revenue directly. If you are a happier Chrome user because of this extension, a donation will help me ration more time to this project. As a developer, I have to choose my time wisely, and while I love working on it, it is not always easy to sit down and improve the extension while I have other obligations.
+Tab Master 8000 is free of cost and doesn't generate any revenue directly. If you are a happier Chrome user because of this extension, a donation will help me ration more time to this project. As a developer, I have to choose my time wisely, and while I love working on it, it is not always easy to sit down and improve the extension while I have other obligations.
 
 If you are a developer and would like to contribute time to this project, you can submit pull requests to this project's master branch on Github.
 

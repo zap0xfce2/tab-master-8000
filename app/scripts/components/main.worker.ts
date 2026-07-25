@@ -370,7 +370,11 @@ const processWindows = function(s, msg: Partial<WorkerMessage>) {
   // Prevent state being overriden from another window while session manager is in use
   if (!msg.modalOpen) {
     (stateUpdate[stateUpdate.modeKey] as ChromeItem[]) = filter((stateUpdate[stateUpdate.modeKey] as ChromeItem[]), function(item) {
-      return !isNewTab(item.url);
+      if (isNewTab(item.url)) return false;
+
+      if (stateUpdate.modeKey === 'tabs' && s.groupFilter) return item.groupId === s.groupFilter;
+
+      return true;
     });
     checkFavicons(s, (stateUpdate[stateUpdate.modeKey] as ChromeItem[]), stateUpdate);
   } else {

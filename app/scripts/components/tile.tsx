@@ -6,6 +6,7 @@ import {findIndex} from '@jaszhix/utils';
 
 import state from './stores/state';
 import {themeStore} from './stores/theme';
+import {getTabGroupColorHex, hasTabGroup} from './stores/tabGroupColors';
 
 import {Panel} from './bootstrap';
 import {unref, sanitizeTitle} from './utils';
@@ -24,6 +25,7 @@ export interface TileProps {
   theme: Theme;
   i: number;
   folder: string;
+  groupFilter: number | false;
   onDragStart: React.DragEventHandler;
   onDragEnd: React.DragEventHandler;
   onDragOver: React.DragEventHandler;
@@ -110,6 +112,12 @@ class Tile extends React.Component<TileProps, TileState> {
     let p = this.props;
 
     state.set({folder: p.folder ? false : folderName});
+  }
+
+  filterByGroup = () => {
+    let p = this.props;
+
+    state.set({groupFilter: p.groupFilter ? false : p.tab.groupId});
   }
 
   handleClick = () => {
@@ -213,6 +221,11 @@ class Tile extends React.Component<TileProps, TileState> {
     let openTab = p.tab.hasOwnProperty('openTab') && p.tab.openTab;
     let isTab = p.prefs.mode === 'tabs' || openTab;
     let isLoading = p.tab.status === 'loading';
+    let hasThumbnail = !!p.tab.thumbnailUrl;
+    let tileBackgroundImage = hasThumbnail ? p.tab.thumbnailUrl : p.tab.favIconUrl;
+    let groupColorHex = getTabGroupColorHex(p.tab.groupColor);
+    let showGroupBadge = p.prefs.mode === 'tabs' && p.prefs.showTabGroupBadge && hasTabGroup(p.tab);
+    let groupBadgeActive = p.groupFilter === p.tab.groupId;
 
     if (s.hover) titleFontSize--;
 
@@ -246,10 +259,10 @@ class Tile extends React.Component<TileProps, TileState> {
         float: 'left',
         margin: '6px',
         backgroundColor: s.hover ? p.theme.tileBgHover : p.theme.tileBg,
-        backgroundImage: `url('${p.tab.favIconUrl}')`,
-        backgroundBlendMode: 'luminosity',
+        backgroundImage: `url('${tileBackgroundImage}')`,
+        backgroundBlendMode: hasThumbnail ? 'normal' : 'luminosity',
         backgroundPosition: 'center',
-        backgroundSize: 'contain',
+        backgroundSize: hasThumbnail ? 'cover' : 'contain',
         backgroundRepeat: 'no-repeat',
         overflow: 'hidden',
         zIndex: 50,
@@ -264,10 +277,10 @@ class Tile extends React.Component<TileProps, TileState> {
         width: p.prefs.tabSizeHeight+80,
         padding: s.hover ? '0px' : 'initial',
         borderRadius: '0px',
-        backgroundImage: `url('${p.tab.favIconUrl}')`,
-        backgroundBlendMode: 'luminosity',
+        backgroundImage: `url('${tileBackgroundImage}')`,
+        backgroundBlendMode: hasThumbnail ? 'normal' : 'luminosity',
         backgroundPosition: 'center',
-        backgroundSize: '1px, auto, contain',
+        backgroundSize: hasThumbnail ? 'cover' : '1px, auto, contain',
         opacity: 0.8,
         transition: p.prefs.animations ? 'padding 0.1s, height 0.1s, opacity 0.1s, background-size 0.1s' : 'initial',
         transitionTimingFunction: 'ease-in-out',
@@ -310,6 +323,7 @@ class Tile extends React.Component<TileProps, TileState> {
         width: `${p.prefs.tabSizeHeight + 80}px`,
         padding: '0px',
         borderRadius: '0px',
+        borderTop: showGroupBadge ? `3px solid ${groupColorHex}` : 'none',
         backgroundColor: s.hover ? p.theme.tileBg : p.tab.pinned || p.tab.mutedInfo.muted || p.tab.audible || s.duplicate ? themeStore.opacify(p.theme.tileBg, 0.8) : 'rgba(255, 255, 255, 0)',
         position: 'absolute',
         zIndex: 11,
@@ -380,6 +394,17 @@ class Tile extends React.Component<TileProps, TileState> {
         transition: 'opacity 0.5s',
         animationIterationCount: 'infinite',
         animationDuration: '1s'
+      },
+      groupBadge: {
+        position: 'absolute',
+        top: '4px',
+        left: '4px',
+        fontSize: '11px',
+        color: groupColorHex,
+        cursor: 'pointer',
+        zIndex: 12,
+        transform: groupBadgeActive ? 'scale(1.45)' : 'scale(1)',
+        transition: p.prefs.animations ? 'transform 0.15s' : 'initial'
       }
     });
 
@@ -445,6 +470,12 @@ class Tile extends React.Component<TileProps, TileState> {
       }
         header={
           <div className={css(styles.headerContainer)}>
+            {showGroupBadge ?
+              <i
+                title={p.tab.groupTitle || utils.t('unnamedTabGroup')}
+                className={css(dynamicStyles.groupBadge) + ' icon-circle-small'}
+                onClick={this.filterByGroup}
+              /> : null}
             <ul className={css(dynamicStyles.headerIconContainer) + ' icons-list'}>
               {isTab && (s.duplicate || isLoading) ?
                 <li>

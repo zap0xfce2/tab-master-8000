@@ -27,9 +27,13 @@ body {
   background-blend-mode: soft-light;
   background-size: cover;
 }
-.search-tabs {
-  position: relative;
-  left: 20px;
+.search-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  max-width: calc(100% - 220px);
 }
 .session-field {
   position: relative;
@@ -195,11 +199,12 @@ select.Dropdown {
   position: relative;
   top: -56px;
 }
-.ntg-search-google-text {
+.ntg-search-web-text {
   position: absolute;
-  left: -160px;
+  left: calc(100% + 12px);
   top: 7px;
   color: #ccc;
+  white-space: nowrap;
 }
 .ntg-favicon {
   width: 40px;
@@ -476,7 +481,7 @@ div.row.ntg-tile-row-top > div.col-xs-3 > div > i {
   left: 0;
   z-index: 9999;
 }
-.tm5k-info {
+.tm8k-info {
   margin-top: 7px;
   text-shadow: 1px 1px #fff;
 }
@@ -530,7 +535,7 @@ tr {
 }
 
 .theming,
-.modal-tm5k,
+.modal-tm8k,
 .sessions {
   user-select: none;
 }
