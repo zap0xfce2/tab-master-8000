@@ -1,12 +1,5 @@
 import moment from 'moment';
 moment.locale(chrome.i18n.getUILanguage());
-import state from './stores/state';
-
-if (!state.isOptions) {
-  let startupP: HTMLElement = document.querySelector('.startup-text-wrapper > .startup-p');
-
-  if (startupP) startupP.innerText = moment().format('h:mm A');
-}
 
 import React from 'react';
 import {assignIn} from 'lodash';
@@ -14,6 +7,7 @@ import mouseTrap from 'mousetrap';
 import v from 'vquery';
 import {tryFn} from '@jaszhix/utils';
 
+import state from './stores/state';
 import {setKeyBindings} from './stores/main';
 
 import Root from './root';

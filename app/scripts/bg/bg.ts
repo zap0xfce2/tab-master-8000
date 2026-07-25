@@ -1,21 +1,33 @@
 /// <reference path="../../../types/index.d.ts" />
 import {browser} from 'webextension-polyfill-ts';
 import type * as B from 'webextension-polyfill-ts'; // eslint-disable-line no-unused-vars
-chrome.runtime.setUninstallURL('https://docs.google.com/forms/d/e/1FAIpQLSeNuukS1pTpeZgtMgE-xg0o1R-b5br-JdWJE7I2SfXMOdfjUQ/viewform');
 import {throttle, cloneDeep, isEqual, first, last, orderBy, uniqBy, without} from 'lodash';
 // @ts-ignore
 globalThis.window = {};
-const v = require('vquery');
 
 import * as uuid from 'uuid';
 import * as Sentry from '@sentry/browser';
 import {findIndex, find, each} from '@jaszhix/utils';
 import {eventState, state} from './state';
-import {timeout, sendMsg, sendError, chromeHandler} from './utils';
+import {timeout, sendMsg, sendError, chromeHandler, keyedDebounce, arrayBufferToBase64} from './utils';
 
 import prefsStore from './prefs';
 import {isNewTab} from '../shared/utils';
-import {domainRegex} from '../shared/constants';
+import {domainRegex, LINKED_EXTENSION_URL} from '../shared/constants';
+
+// Tab thumbnail capture (Chrome only, see captureActiveTabThumbnail).
+const THUMBNAIL_CAPTURE_DEBOUNCE = 500;
+const THUMBNAIL_JPEG_QUALITY_CAPTURE = 45;
+const THUMBNAIL_JPEG_QUALITY_RESIZE = 0.5;
+const THUMBNAIL_MAX_WIDTH = 400;
+const uncapturableUrl = /^(chrome|chrome-extension|edge|about|devtools):/;
+
+// vquery's constructor unconditionally checks `instanceof Element`, which doesn't exist in this
+// MV3 service worker (no DOM) - reordering the array directly avoids that dependency entirely.
+const moveArrayItem = <T>(array: T[], fromIndex: number, toIndex: number): T[] => {
+  array.splice(toIndex, 0, array.splice(fromIndex, 1)[0]);
+  return array;
+};
 
 chrome.runtime.onStartup.addListener(() => {
   eventState.onStartup = {type: 'startup'};
@@ -146,6 +158,7 @@ class Bg {
   state: BackgroundState;
   connectId: number;
   image: string;
+  scheduleThumbnailCapture: (windowId: number) => void;
 
   constructor() {
     this.state = state;
@@ -158,6 +171,7 @@ class Bg {
     }
 
     this.connectId = prefsStore.connect('prefs', (e) => this.prefsChange(e.prefs));
+    this.scheduleThumbnailCapture = keyedDebounce(this.captureActiveTabThumbnail, THUMBNAIL_CAPTURE_DEBOUNCE);
     this.init();
   }
 
@@ -335,11 +349,40 @@ class Bg {
       console.log('onDetached: ', tabId, info);
       this.removeSingleItem(tabId, info.oldWindowId);
     }));
+    /*
+    Tab groups changed (Chrome only, read-only - metadata refresh, membership changes already
+    come through chrome.tabs.onUpdated above)
+    */
+    if (this.state.chromeVersion > 1 && chrome.tabGroups) {
+      await this.refreshTabGroupCache();
+
+      let handleTabGroupChange = chromeHandler(async (group: chrome.tabGroups.TabGroup) => {
+        if (!group || typeof group.windowId !== 'number') return;
+
+        await this.refreshTabGroupCache();
+        await this.resyncGroupedTabs(group.windowId);
+      });
+
+      chrome.tabGroups.onCreated.addListener(handleTabGroupChange);
+      chrome.tabGroups.onUpdated.addListener(handleTabGroupChange);
+      chrome.tabGroups.onMoved.addListener(handleTabGroupChange);
+      chrome.tabGroups.onRemoved.addListener(handleTabGroupChange);
+    }
 
     chrome.commands.onCommand.addListener(async (command) => {
       switch (command) {
         case 'openClient': {
           await this.openTabMaster();
+          break;
+        }
+
+        case 'openFavorites': {
+          await browser.tabs.create({url: LINKED_EXTENSION_URL, active: true});
+          break;
+        }
+
+        case 'focusSearch': {
+          await sendMsg({type: 'focusSearchEntry'});
           break;
         }
       }
@@ -562,6 +605,13 @@ class Bg {
 
   formatTabs = async (prefs, tabs) => {
     let blacklisted: TabIDInfo[] = [];
+    let thumbnails: Record<string, string> = {};
+
+    if (this.state.chromeVersion > 1 && chrome.storage.session) {
+      try {
+        thumbnails = await chrome.storage.session.get(null) as Record<string, string>;
+      } catch (e) {/* fall back to favicon/letter tile */}
+    }
 
     for (let i = 0, len = tabs.length; i < len; i++) {
       let urlMatch = tabs[i].url.match(domainRegex);
@@ -570,6 +620,20 @@ class Bg {
         timeStamp: new Date(Date.now()).getTime(),
         domain: urlMatch ? urlMatch[1] : tabs[i].url.split('/')[2],
       });
+
+      if (thumbnails[tabs[i].id]) {
+        tabs[i].thumbnailUrl = thumbnails[tabs[i].id];
+      }
+
+      if (typeof tabs[i].groupId === 'number' && chrome.tabGroups && tabs[i].groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
+        let group = find(this.state.tabGroups, g => g.id === tabs[i].groupId);
+
+        if (group) {
+          tabs[i].groupColor = group.color;
+          tabs[i].groupTitle = group.title;
+          tabs[i].groupCollapsed = group.collapsed;
+        }
+      }
 
       if (prefs.trackMostUsed) {
         tabs[i].count = tabs[i].count != null ? tabs[i].count : 0;
@@ -581,20 +645,117 @@ class Bg {
     }
 
     if (blacklisted.length > 0 && prefs && prefs.singleNewTab) {
-      // TODO: Fix this leaving two tabs per window when singleNewTab is true in FF.
-      let [firstNewTab, ...extraNewTabs] = blacklisted;
+      // Keep the tab already tracked as the window's single New Tab, if any, so its identity
+      // stays stable across repeated New Tab creations instead of just picking array index 0.
+      let survivor = find(blacklisted, tab => find(this.state.newTabs, tracked => tracked.id === tab.id)) || blacklisted[0];
+      let extraNewTabs = without(blacklisted, survivor);
+      // Only an actually-active duplicate (e.g. Cmd+T resolving to the extension's New Tab page)
+      // may hand its focus to the survivor - deduping a background-created duplicate, or the
+      // many other formatTabs() runs (init queryTabs, resyncGroupedTabs), must not steal focus.
+      let activeTabRemoved = false;
 
       for (let i = 0, len = extraNewTabs.length; i < len; i++) {
-        await browser.tabs.remove(<number>extraNewTabs[i].id);
+        let sourceTab = find(tabs, tab => tab.id === extraNewTabs[i].id);
+
+        if (sourceTab && sourceTab.active) activeTabRemoved = true;
+
+        try {
+          await browser.tabs.remove(<number>extraNewTabs[i].id);
+        } catch (e) {
+          // Tab may already have been closed by a concurrent onCreated event; ignore.
+        }
       }
 
-      this.state.newTabs.push(firstNewTab);
+      if (activeTabRemoved) {
+        try {
+          await browser.tabs.update(<number>survivor.id, {active: true});
+        } catch (e) {
+          // Survivor may have been closed concurrently; ignore.
+        }
+      }
+
+      this.state.newTabs.push(survivor);
     } else {
       this.state.newTabs = this.state.newTabs.concat(blacklisted);
     }
 
     this.state.set({newTabs: uniqBy(this.state.newTabs, 'id')});
     return tabs;
+  }
+
+  // Caches native tab group metadata (color/title/collapsed) so formatTabs can look it up per
+  // tab without a chrome.tabGroups.get() round trip for every single tab.
+  refreshTabGroupCache = async () => {
+    if (this.state.chromeVersion === 1 || !chrome.tabGroups) return;
+
+    try {
+      let tabGroups = await chrome.tabGroups.query({});
+      this.state.set({tabGroups});
+    } catch (e) {
+      // Transient failure (e.g. service worker restart) - retried on the next tabGroups event.
+    }
+  }
+
+  // Tab group metadata (color/title/collapsed) changes don't trigger chrome.tabs.onUpdated,
+  // unlike a tab joining/leaving a group - so affected tabs need an explicit re-format here.
+  resyncGroupedTabs = async (windowId: number) => {
+    let refWindow = findIndex(this.state.windows, win => win.id === windowId);
+
+    if (refWindow === -1) return;
+
+    this.state.windows[refWindow].tabs = await this.formatTabs(this.state.prefs, this.state.windows[refWindow].tabs);
+    this.state.set({windows: this.state.windows}, true);
+    await sendMsg({windows: this.state.windows, windowId});
+  }
+
+  // Captures a small, low-quality screenshot of the currently active tab in `windowId` and
+  // caches it for the tile view's thumbnail background. captureVisibleTab can only ever
+  // photograph the active tab of a window, so this must be called shortly after a tab becomes
+  // active/finishes loading (see handleActivation/updateSingleItem) rather than for a specific
+  // tabId - by the time we'd know a tab is about to lose focus, it already has.
+  captureActiveTabThumbnail = async (windowId: number) => {
+    if (this.state.chromeVersion === 1 || !chrome.storage.session) return;
+
+    let [activeTab] = await browser.tabs.query({active: true, windowId}) as ChromeTab[];
+
+    if (!activeTab || !activeTab.url || uncapturableUrl.test(activeTab.url)) return;
+
+    try {
+      let captureUrl = await chrome.tabs.captureVisibleTab(windowId, {
+        format: 'jpeg',
+        quality: THUMBNAIL_JPEG_QUALITY_CAPTURE
+      });
+      let blob = await (await fetch(captureUrl)).blob();
+      let bitmap = await createImageBitmap(blob);
+      let targetWidth = Math.min(THUMBNAIL_MAX_WIDTH, bitmap.width);
+      let targetHeight = Math.round(bitmap.height * (targetWidth / bitmap.width));
+      let canvas = new OffscreenCanvas(targetWidth, targetHeight);
+      let ctx = canvas.getContext('2d');
+
+      ctx.drawImage(bitmap, 0, 0, targetWidth, targetHeight);
+      bitmap.close();
+
+      let outBlob = await canvas.convertToBlob({type: 'image/jpeg', quality: THUMBNAIL_JPEG_QUALITY_RESIZE});
+      let thumbnailUrl = `data:image/jpeg;base64,${arrayBufferToBase64(await outBlob.arrayBuffer())}`;
+
+      await chrome.storage.session.set({[String(activeTab.id)]: thumbnailUrl});
+
+      let refWindow = findIndex(this.state.windows, win => win.id === windowId);
+
+      if (refWindow === -1) return;
+
+      let refTab = findIndex(this.state.windows[refWindow].tabs, tab => tab.id === activeTab.id);
+
+      if (refTab === -1) return;
+
+      this.state.windows[refWindow].tabs[refTab].thumbnailUrl = thumbnailUrl;
+      this.state.set({windows: this.state.windows}, true);
+      await sendMsg({windows: this.state.windows, windowId});
+    } catch (e) {
+      // Expected/frequent: protected pages, capture rate limit, tab closed/switched mid-capture.
+      // Not sent to sendError to avoid flooding error telemetry with routine misses.
+      if (process.env.NODE_ENV === 'development') console.log('Thumbnail capture skipped:', e.message);
+    }
   }
 
   queryTabs = async (send=null, prefs, windowId?, init = false) => {
@@ -820,6 +981,8 @@ class Bg {
 
     if (isNewTab(windows[refWindow].tabs[refTab].url)) return;
 
+    this.scheduleThumbnailCapture(e.windowId);
+
     tab = windows[refWindow].tabs[refTab];
 
     // Update timestamp for auto-discard feature's accuracy.
@@ -836,7 +999,7 @@ class Bg {
   }
 
   createSingleItem = async (e: ChromeTab, windowId?: number, recursion = 0) => {
-    const {chromeVersion, prefs, windows, newTabs, removed, blacklist, sessions} = this.state;
+    const {chromeVersion, prefs, windows, removed, blacklist, sessions} = this.state;
 
     if (!windowId) {
       windowId = e.windowId;
@@ -888,11 +1051,11 @@ class Bg {
       }
 
       windows[refWindow].tabs.push(e);
-      // @ts-ignore
-      windows[refWindow].tabs = v(windows[refWindow].tabs).move(
+      windows[refWindow].tabs = moveArrayItem(
+        windows[refWindow].tabs,
         findIndex(windows[refWindow].tabs, tab => isEqual(last(windows[refWindow].tabs), tab)),
         e.index
-      ).ns;
+      );
     } else {
       windows[refWindow].tabs.push(e);
     }
@@ -903,6 +1066,9 @@ class Bg {
 
     // Activate the first new tab if it is open, and if this is a second new tab being created.
     if (isNewTab(e.url) && prefs.singleNewTab) {
+      // Read newTabs fresh, since formatTabs() above may have replaced this.state.newTabs
+      // with a new array reference.
+      let newTabs = this.state.newTabs;
       let refNewTab = findIndex(newTabs, tab => tab.windowId === windowId);
 
       if (refNewTab !== -1) {
@@ -948,6 +1114,10 @@ class Bg {
 
     if (this.state.removed.length > 10) {
       this.state.removed.shift();
+    }
+
+    if (this.state.chromeVersion > 1 && chrome.storage.session) {
+      chrome.storage.session.remove(String(e)).catch(() => {});
     }
 
     this.state.removed.push(this.state.windows[refWindow].tabs[refTab]);
@@ -997,6 +1167,10 @@ class Bg {
       }
     }
 
+    if (tab.status === 'complete' && tab.active) {
+      this.scheduleThumbnailCapture(tab.windowId);
+    }
+
     setActionThrottled(this, 'update', this.state.windows[refWindow].tabs[refTab], tab);
 
     Object.assign(tab, {
@@ -1012,6 +1186,10 @@ class Bg {
     } else {
       this.state.windows[refWindow].tabs = orderBy(this.state.windows[refWindow].tabs, ['pinned'], ['desc']);
     }
+
+    // A tab's url is often still unresolved when onCreated fires, so a duplicate New Tab
+    // only becomes detectable as such once its url resolves here via onUpdated.
+    this.state.windows[refWindow].tabs = await this.formatTabs(this.state.prefs, this.state.windows[refWindow].tabs);
 
     this.state.set({windows: this.state.windows}, true);
 
@@ -1045,8 +1223,7 @@ class Bg {
       return;
     }
 
-    // @ts-ignore
-    this.state.windows[refWindow].tabs = v(this.state.windows[refWindow].tabs).move(refTab, tab.index).ns;
+    this.state.windows[refWindow].tabs = moveArrayItem(this.state.windows[refWindow].tabs, refTab, tab.index);
     this.state.windows[refWindow].tabs[refTab].timeStamp = Date.now();
 
     if (tab.pinned) {

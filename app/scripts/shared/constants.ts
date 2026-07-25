@@ -1,3 +1,5 @@
+export const LINKED_EXTENSION_URL = 'chrome-extension://mfpgdeedjdffbfoomliadmehaoailnjn/index.html';
+
 export const domainRegex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n]+)/im;
 
 // Modified from https://gist.github.com/dperini/729294

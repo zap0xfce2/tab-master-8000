@@ -3,7 +3,7 @@
     "message": "Tab Master 5000"
   },
   "appDesc": {
-    "message": "El cuchillo del ejército suizo de la tabulación, de la historia, de la señal, de la sesión, y de la gerencia de extensión."
+    "message": "El cuchillo del ejército suizo de la tabulación, de la historia, de la señal, de la sesión, y de la gerencia de extensión. m0dded by Zap0xfce2"
   },
   "hi": {
     "message": "Hola"
@@ -153,10 +153,7 @@
     "message": "movimiento de"
   },
   "pressEnterToSearch": {
-    "message": "Pulse Intro para buscar"
-  },
-  "google": {
-    "message": "Google"
+    "message": "Pulse Intro para abrir el primer resultado"
   },
   "newVersionAvailable": {
     "message": "Nueva versión disponible"
@@ -172,6 +169,9 @@
   },
   "search": {
     "message": "Buscar"
+  },
+  "openFavorites": {
+    "message": "Abrir favoritos"
   },
   "resetData": {
     "message": "El restablecimiento borrará todos los datos. Por favor, haga una copia de seguridad de sus sesiones y temas antes de comenzar."
@@ -328,6 +328,15 @@
   },
   "trackMostUsedTip": {
     "message": "Mantiene un registro de cuántas veces se activa una pestaña, lo que habilita un modo de clasificación opcional."
+  },
+  "showTabGroupBadge": {
+    "message": "Mostrar insignia de color de grupo de pestañas"
+  },
+  "showTabGroupBadgeTip": {
+    "message": "Marca cada miniatura con el color de su grupo de pestañas nativo de Chrome y permite hacer clic para filtrar la vista a ese grupo."
+  },
+  "unnamedTabGroup": {
+    "message": "Grupo sin nombre"
   },
   "autoDiscard": {
     "message": "Habilitar el descarte automático de pestañas de la memoria"

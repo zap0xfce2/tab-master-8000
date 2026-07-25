@@ -1,5 +1,6 @@
 import React from 'react';
 import state from './stores/state';
+import {openFavorites} from './stores/main';
 import * as utils from './stores/tileUtils';
 import {Btn, Col, Row} from './bootstrap';
 import Loading from './loading';
@@ -32,17 +33,6 @@ class Search extends React.Component<SearchProps> {
     state.set({search: e.target.value});
   }
 
-  handleWebSearch = (e) => {
-    e.preventDefault();
-    chrome.tabs.query({
-      title: 'New Tab'
-    }, (tabs) => {
-      chrome.tabs.update(tabs[0].id, {
-        url: 'https://www.google.com/?gws_rd=ssl#q=' + this.props.s.search
-      });
-    });
-  }
-
   openAbout = () => {
     state.set({settings: 'about', modal: {state: true, type: 'settings'}});
   }
@@ -52,9 +42,19 @@ class Search extends React.Component<SearchProps> {
   }
 
   handleEnter = (e) => {
-    if (e.keyCode === 13) {
-      this.handleWebSearch(e);
+    if (e.keyCode !== 13) {
+      return;
     }
+
+    e.preventDefault();
+
+    const {s} = this.props;
+
+    if (s.modeKey !== 'searchCache') {
+      return;
+    }
+
+    utils.activateTab(s.searchCache[0]);
   }
 
   handleTopNavButtonClick = (cb) => {
@@ -92,24 +92,17 @@ class Search extends React.Component<SearchProps> {
                 icon="menu7"
                 noIconPadding={true}
               />
-              <input
-                ref={this.ref}
-                type="text"
-                value={p.s.search}
-                className="form-control search-tabs"
-                placeholder={`${utils.t('search')} ${utils.t(p.s.prefs.mode)}...`}
-                onChange={this.handleSearch}
-                onKeyDown={(e) => this.handleEnter(e)}
-              />
             </div>
           </Col>
           <Col size={p.s.width <= 825 ? p.s.width <= 630 ? p.s.width <= 514 ? '2' : '4' : '6' : '8'} style={{float: 'right'}}>
-            {p.s.search.length > 0 ?
-              <span
-                style={{color: p.theme.textFieldsPlaceholder}}
-                className="search-msg ntg-search-google-text">
-                {`${utils.t('pressEnterToSearch')} ${utils.t('google')}`}
-              </span> : null}
+            <Btn
+              onClick={openFavorites}
+              className="topDarkBtn pull-right"
+              icon="star-full2"
+              noIconPadding={true}
+              data-place="bottom"
+              data-tip={utils.t('openFavorites')}
+            />
             {p.s.topNavButton === 'newVersion' ?
               <Btn
                 onClick={() => this.handleTopNavButtonClick(()=>chrome.runtime.reload())}
@@ -148,6 +141,23 @@ class Search extends React.Component<SearchProps> {
                 </p>
               </div> : null}
           </Col>
+          <div className="search-container">
+            <input
+              ref={this.ref}
+              type="text"
+              value={p.s.search}
+              className="form-control search-tabs"
+              placeholder={`${utils.t('search')} ${utils.t(p.s.prefs.mode)}...`}
+              onChange={this.handleSearch}
+              onKeyDown={(e) => this.handleEnter(e)}
+            />
+            {p.s.search.length > 0 ?
+              <span
+                style={{color: p.theme.textFieldsPlaceholder}}
+                className="search-msg ntg-search-web-text">
+                {utils.t('pressEnterToSearch')}
+              </span> : null}
+          </div>
         </Row>
       </div>
     );

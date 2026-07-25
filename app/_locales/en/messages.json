@@ -4,8 +4,8 @@
     "description": "The title of the application, displayed in the web store."
   },
   "appDesc": {
-    "message": "The swiss army knife of tab, history, bookmark, session, and extension management.",
-    "description":"The description of the application, displayed in the web store."
+    "message": "The swiss army knife of tab, history, bookmark, session, and extension management. m0dded by Zap0xfce2",
+    "description": "The description of the application, displayed in the web store."
   },
   "hi": {
     "message": "Hi"
@@ -155,10 +155,7 @@
     "message": "moving of"
   },
   "pressEnterToSearch": {
-    "message": "Press Enter to Search"
-  },
-  "google": {
-    "message": "Google"
+    "message": "Press Enter to open the top result"
   },
   "newVersionAvailable": {
     "message": "New Version Available"
@@ -174,6 +171,9 @@
   },
   "search": {
     "message": "Search"
+  },
+  "openFavorites": {
+    "message": "Open favorites"
   },
   "resetData": {
     "message": "Resetting will delete all data. Please backup your sessions and themes before you begin."
@@ -330,6 +330,15 @@
   },
   "trackMostUsedTip": {
     "message": "Keeps record of how many times a tab is activated, which enables an optional sorting mode."
+  },
+  "showTabGroupBadge": {
+    "message": "Show tab group color badge"
+  },
+  "showTabGroupBadgeTip": {
+    "message": "Marks each tile with the color of its native Chrome tab group and lets you click it to filter the view to that group."
+  },
+  "unnamedTabGroup": {
+    "message": "Unnamed group"
   },
   "autoDiscard": {
     "message": "Enable automatic discarding of tabs from memory"

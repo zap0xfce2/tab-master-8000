@@ -39,6 +39,7 @@ const initialState = <BackgroundState>{
   history: [],
   bookmarks: [],
   extensions: [],
+  tabGroups: [],
   removed: [],
   newTabs: [],
   sessions: [],

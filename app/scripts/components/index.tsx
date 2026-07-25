@@ -55,10 +55,6 @@ const loadPrefs = async () => {
   let response = await browser.runtime.sendMessage(chrome.runtime.id, {method: 'prefs'});
 
   if (!response) {
-    let startupP: HTMLElement = document.querySelector('.startup-text-wrapper > .startup-p');
-
-    if (startupP) startupP.innerText = 'Starting up';
-
     setTimeout(loadPrefs, 500);
     return;
   }

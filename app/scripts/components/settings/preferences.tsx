@@ -668,6 +668,12 @@ class Preferences extends React.Component<PreferencesComponentProps, Preferences
               label={`${utils.t('trackMostUsed')} (BETA)`}
               data-tip={utils.t('trackMostUsedTip')}
             />
+            <Toggle
+              onClick={() => this.handleClick('showTabGroupBadge')}
+              on={p.prefs.showTabGroupBadge}
+              label={utils.t('showTabGroupBadge')}
+              data-tip={utils.t('showTabGroupBadgeTip')}
+            />
             {p.chromeVersion >= 54?
               <Toggle
                 onClick={() => this.handleClick('autoDiscard')}

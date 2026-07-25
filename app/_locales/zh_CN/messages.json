@@ -4,8 +4,8 @@
     "description": "The title of the application, displayed in the web store."
   },
   "appDesc": {
-    "message": "集标签页、历史记录、会话以及扩展管理功能于一身的一把瑞士军刀。",
-    "description":"The description of the application, displayed in the web store."
+    "message": "集标签页、历史记录、会话以及扩展管理功能于一身的一把瑞士军刀。m0dded by Zap0xfce2",
+    "description": "The description of the application, displayed in the web store."
   },
   "hi": {
     "message": "Hi"
@@ -155,10 +155,7 @@
     "message": "移动操作："
   },
   "pressEnterToSearch": {
-    "message": "按回车键（Enter）执行搜索"
-  },
-  "google": {
-    "message": "Google"
+    "message": "按回车键（Enter）打开第一个结果"
   },
   "newVersionAvailable": {
     "message": "有新版本了"
@@ -174,6 +171,9 @@
   },
   "search": {
     "message": "搜索"
+  },
+  "openFavorites": {
+    "message": "打开收藏夹"
   },
   "resetData": {
     "message": "重置将删除所有数据。开始前请备份您的会话和主题。"
@@ -330,6 +330,15 @@
   },
   "trackMostUsedTip": {
     "message": "持续记录标签页被激活的次数。这将新增一种排序模式。"
+  },
+  "showTabGroupBadge": {
+    "message": "显示标签组颜色标记"
+  },
+  "showTabGroupBadgeTip": {
+    "message": "用原生 Chrome 标签组的颜色标记每个卡片，点击可将视图筛选为该分组。"
+  },
+  "unnamedTabGroup": {
+    "message": "未命名分组"
   },
   "autoDiscard": {
     "message": "启用自动休眠标签页以节省内存"

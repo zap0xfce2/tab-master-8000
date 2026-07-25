@@ -11,6 +11,7 @@ Tab Master 5K replaces your New Tab page with a full-featured tabs, history, boo
 - Search tabs in the top search bar.
 - Option to sort tabs by website or alphabetical order, and apply the order to your Chrome window.
 - Automatically discard tabs from memory and customize how long they have to be inactive to trigger it.
+- Native Chrome tab group membership is shown as a color accent and badge on each tile; click the badge to filter the grid to that group.
 
 #### Customization
 - Full control of the New Tab's appearance with a flexible theme editor.
@@ -30,6 +31,16 @@ Tab Master 5K replaces your New Tab page with a full-featured tabs, history, boo
 - Quickly navigate the extension with keyboard shortcuts.
 - Undo tab actions by pressing CTRL+Z, or through the context menu while a New Tab page is open.
 - Add websites you do not want to view to a comma separated blacklist in Settings -> Preferences. Websites added to the blacklist will have their tabs closed under any circumstance.
+
+### Changes from the Original
+This is a fork of [jaszhix/tab-master-5000-extension](https://github.com/jaszhix/tab-master-5000-extension), modded by Zap0xfce2. Compared to the original at the same version, it adds:
+
+- **Tab screenshots for Manifest V3.** The original removed the screenshot/thumbnail feature when it moved to Manifest V3 (its own changelog notes "Screenshot feature has been removed due to API incompatibilities"). This fork reimplements it in an MV3-compatible way: it opportunistically captures the active tab via `captureVisibleTab`, downsizes it with `OffscreenCanvas`, and caches it per-session in `chrome.storage.session` (no disk persistence) for the tile view's thumbnail background. Chrome only.
+- **Native tab group indicator with click-to-filter.** Tiles in the tabs view display a color accent and badge matching their native Chrome tab group (read-only — groups themselves are still created/edited natively in Chrome); clicking the badge filters the grid to that one group, and the active filter persists even if you close and reopen the New Tab page. Toggle it in Preferences ("Show tab group color badge"). Chrome only.
+- **New global shortcut "Open Favorites"** (`chrome.commands`, in-page `Ctrl+D`): opens a linked companion extension in a new tab.
+- **New global shortcut "Focus Search"** (`chrome.commands`): focuses the search field even when the New Tab page isn't the focused element, complementing the existing in-page `Ctrl+F`.
+- **Broader host permission (`<all_urls>`)** in the Chrome manifest, required at runtime by `captureVisibleTab` to support the screenshot feature above.
+- **No uninstall feedback survey.** The original opens a Google Forms survey ("Would you like to help improve this extension?") via `chrome.runtime.setUninstallURL` when the extension is uninstalled. This fork removes that call.
 
 ### Contributing
 - Install the project dependencies with ```npm install```.
