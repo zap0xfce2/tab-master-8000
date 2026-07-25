@@ -282,8 +282,8 @@ export const handleMode = async (mode: ViewMode, stateUpdate: Partial<GlobalStat
     case 'bookmarks':
       // Chrome only allows interacting with the chrome.permissions* API with a user gesture,
       // including the function that calls back with a boolean if we have a permission.
-      // This makes it difficult to handle extension reloads, where TM5K likes to load
-      // a new tab page if one was already open, to restore it. For now TM5K tracks permissions
+      // This makes it difficult to handle extension reloads, where TM8K likes to load
+      // a new tab page if one was already open, to restore it. For now TM8K tracks permissions
       // granted manually, and resets prefs based on those values any time prefs are updated.
       if (userGesture) {
         let granted = await requestPermission('bookmarks');

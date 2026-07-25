@@ -1,6 +1,6 @@
 {
   "appName": {
-    "message": "Tab Master 5000",
+    "message": "Tab Master 8000",
     "description": "The title of the application, displayed in the web store."
   },
   "appDesc": {
@@ -163,8 +163,8 @@
   "updatedTo": {
     "message": "Updated to"
   },
-  "thankYouForInstallingTM5K": {
-    "message": "Thank you for installing TM5K"
+  "thankYouForInstallingTM8K": {
+    "message": "Thank you for installing TM8K"
   },
   "downloadingAndCachingFavicons": {
     "message": "Downloading and caching favicons..."
@@ -317,7 +317,7 @@
     "message": "Close New Tab on tab activation"
   },
   "closeOnActivateTip": {
-    "message": "Choose whether or not TM5K is closed when clicking a tab tile or row."
+    "message": "Choose whether or not TM8K is closed when clicking a tab tile or row."
   },
   "allTabs": {
     "message": "Show tabs across all windows"
@@ -344,7 +344,7 @@
     "message": "Enable automatic discarding of tabs from memory"
   },
   "autoDiscardTip": {
-    "message": "This option allows TM5K to automatically clear tabs from memory after they have been inactive for a set amount of time. Clearing tabs from memory will not close the tabs, but Chrome will have to reload them upon activation."
+    "message": "This option allows TM8K to automatically clear tabs from memory after they have been inactive for a set amount of time. Clearing tabs from memory will not close the tabs, but Chrome will have to reload them upon activation."
   },
   "autoDiscardClearTime": {
     "message": "Clear tabs from memory if inactive for"
@@ -400,12 +400,6 @@
   "alertsTip": {
     "message": "Toggles the notifications appearing in the bottom-right corner of the screen."
   },
-  "errorTelemetry": {
-    "message": "Enable anonymous error reporting"
-  },
-  "errorTelemetryTip": {
-    "message": "Keeping this enabled helps improve TM5K. When an error is thrown in the code, your browser, OS, IP, and TM5K settings data (excluding the blacklist) are sent to Sentry along with a stack trace, so the developers can pinpoint the error and patch it for the next release."
-  },
   "screenshotBgOpacity": {
     "message": "Set background image opacity"
   },
@@ -446,7 +440,7 @@
     "message": "Enable favicon caching"
   },
   "faviconCachingTip": {
-    "message": "When enabled, TM5K stores favicons to disk to limit image downloads, and to ensure favicons display when there is no internet connectivity."
+    "message": "When enabled, TM8K stores favicons to disk to limit image downloads, and to ensure favicons display when there is no internet connectivity."
   },
   "actions": {
     "message": "Enable undoing of tab actions"
@@ -595,8 +589,8 @@
   "custom": {
     "message": "Custom"
   },
-  "tm5k": {
-    "message": "TM5K"
+  "tm8k": {
+    "message": "TM8K"
   },
   "colorScheme": {
     "message": "Color Scheme"
@@ -740,7 +734,7 @@
     "message": "Attribution"
   },
   "attributionHeader": {
-    "message": "TM5K was made possible because of the efforts of the following projects."
+    "message": "TM8K was made possible because of the efforts of the following projects."
   },
   "attributionFooter": {
     "message": "Included wallpapers are licensed under the"

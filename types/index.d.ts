@@ -252,8 +252,7 @@ declare global {
     allTabs: boolean;
     resetSearchOnClick: boolean;
     tablePadding: number;
-    errorTelemetry: boolean;
-    newTabMode: 'tm5k' | 'default' | 'custom';
+    newTabMode: 'tm8k' | 'default' | 'custom';
     newTabCustom: string;
     showTabGroupBadge: boolean;
   }

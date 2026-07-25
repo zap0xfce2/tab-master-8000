@@ -13,8 +13,8 @@ mkdir logs || echo "Ignore"
 rm -rf node_modules
 rm -rf dist
 
-#docker rmi -f tab-master-5000-build-env:latest -f
-docker build -t tab-master-5000-build-env . || echo ""
+#docker rmi -f tab-master-8000-build-env:latest -f
+docker build -t tab-master-8000-build-env . || echo ""
 
 # Kill the container on exit in case of an interruption
 cleanUp() {
@@ -33,7 +33,7 @@ commit=$(git log --pretty=format:'%h' -n 1)
 # Runs the container detached, bind mounts to the current directory,
 # and run the npm scripts in a shell. assigns the container hash to $id.
 # Then installs node modules and runs the command arguments of this script.
-id=$(docker run -it -d -e COMMIT_HASH=$commit -v $(pwd):/tm5k tab-master-5000-build-env /bin/sh -c "npm install && $args")
+id=$(docker run -it -d -e COMMIT_HASH=$commit -v $(pwd):/tm8k tab-master-8000-build-env /bin/sh -c "npm install && $args")
 logPath=./logs/build-$commit-$ts.log
 
 echo "Container: $id"

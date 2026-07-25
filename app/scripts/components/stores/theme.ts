@@ -804,7 +804,7 @@ const themeStore = <ThemeStore>init({
     if (!granted) return;
 
     let json = JSON.stringify(themeStore.savedThemes);
-    let filename = `TM5K-Themes-${Date.now()}.json`;
+    let filename = `TM8K-Themes-${Date.now()}.json`;
     let blob = new Blob([json], {type: "application/json;charset=utf-8"});
 
     await browser.downloads.download({

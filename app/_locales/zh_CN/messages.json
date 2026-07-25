@@ -1,6 +1,6 @@
 {
   "appName": {
-    "message": "标签页大师 5000",
+    "message": "标签页大师 8000",
     "description": "The title of the application, displayed in the web store."
   },
   "appDesc": {
@@ -163,8 +163,8 @@
   "updatedTo": {
     "message": "已更新至"
   },
-  "thankYouForInstallingTM5K": {
-    "message": "感谢您安装 标签页大师 5000"
+  "thankYouForInstallingTM8K": {
+    "message": "感谢您安装 标签页大师 8000"
   },
   "downloadingAndCachingFavicons": {
     "message": "正在下载和缓存网站图标..."
@@ -344,7 +344,7 @@
     "message": "启用自动休眠标签页以节省内存"
   },
   "autoDiscardTip": {
-    "message": "此选项将允许 标签页大师 5000 在一段时间后自动将标签页清出内存。操作不会关闭标签页，但下次激活该标签页时需要重新加载其内容。"
+    "message": "此选项将允许 标签页大师 8000 在一段时间后自动将标签页清出内存。操作不会关闭标签页，但下次激活该标签页时需要重新加载其内容。"
   },
   "autoDiscardClearTime": {
     "message": "不活跃超过如下时间后休眠标签页以节省内存"
@@ -399,12 +399,6 @@
   },
   "alertsTip": {
     "message": "切换是否在右下角弹出通知。"
-  },
-  "errorTelemetry": {
-    "message": "启用匿名错误报告"
-  },
-  "errorTelemetryTip": {
-    "message": "启用此选项有助于改进本扩展。当代码触发了错误时，您的浏览器、操作系统、IP 地址以及本扩展的设置数据（黑名单除外）将发送至 Sentry，附一份错误堆栈，以便开发人员针对性查明错误并在之后的版本中修正。"
   },
   "screenshotBgOpacity": {
     "message": "设定背景图片不透明度"
@@ -595,8 +589,8 @@
   "custom": {
     "message": "自定义"
   },
-  "tm5k": {
-    "message": "TM5K"
+  "tm8k": {
+    "message": "TM8K"
   },
   "colorScheme": {
     "message": "颜色方案"
@@ -740,7 +734,7 @@
     "message": "组件"
   },
   "attributionHeader": {
-    "message": "本软件（TM5K）的成功也受益于如下项目。"
+    "message": "本软件（TM8K）的成功也受益于如下项目。"
   },
   "attributionFooter": {
     "message": "包括按下列许可证授权的壁纸："

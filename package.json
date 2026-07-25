@@ -1,10 +1,10 @@
 {
-  "name": "tab-master-5000",
+  "name": "tab-master-8000",
   "version": "6.66.6",
-  "description": "Tab Master 5000",
+  "description": "Tab Master 8000",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jaszhix/tab-master-5000-chrome-extension"
+    "url": "https://github.com/zap0xfce2/tab-master-8000"
   },
   "scripts": {
     "dev-chrome": "cross-env DEV_ENV=chrome NODE_ENV=development concurrently \"gulp build-bg\" \"cross-env DEV_ENV=chrome NODE_ENV=development gulp watch\" \"cross-env BUNDLE_ENTRY=app node --max_old_space_size=16192 --trace-warnings -r @babel/register -r @babel/polyfill -r ts-node/register ./devServer --host=0.0.0.0\"",
@@ -15,10 +15,9 @@
     "build-chrome": "cross-env NODE_ENV=production DEV_ENV=chrome npm run build-all",
     "build-firefox": "cross-env NODE_ENV=production DEV_ENV=firefox npm run build-all",
     "build-sources": "cross-env NODE_ENV=production SKIP_MINIFY=true npm run build-firefox",
-    "update-types": "typesync && npm install",
-    "sentry-new-release": "sentry-cli releases -o jason-hicks new -p tm5k 2.9.1"
+    "update-types": "typesync && npm install"
   },
-  "homepage": "https://chrome.google.com/webstore/detail/tab-master-5000-tab-swiss/mippmhcfjhliihkkdobllhpdnmmciaim",
+  "homepage": "https://github.com/zap0xfce2/tab-master-8000",
   "keywords": [
     "firefox",
     "chrome",
@@ -28,7 +27,7 @@
     "tool",
     "utility"
   ],
-  "author": "jaszhix <jaszhix@gmail.com>",
+  "author": "Zap0xfce2",
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.24.7",
@@ -45,8 +44,6 @@
     "@jaszhix/state": "^1.0.4",
     "@jaszhix/utils": "^1.0.4",
     "@loadable/component": "^5.16.4",
-    "@sentry/browser": "^5.30.0",
-    "@sentry/types": "^5.17.0",
     "@types/autoprefixer": "^9.7.2",
     "@types/babel__core": "^7.20.5",
     "@types/babel__preset-env": "^7.9.6",

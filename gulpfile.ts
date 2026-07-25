@@ -86,9 +86,9 @@ gulp.task('htmlmin', function() {
     .pipe(rename('newtab.html'))
     .pipe(gulp.dest(`./${WORKDIR}`))
 
-    .pipe(gulp.src(`./${WORKDIR}/tm5k_prod.html`))
+    .pipe(gulp.src(`./${WORKDIR}/tm8k_prod.html`))
     .pipe(htmlclean())
-    .pipe(rename('tm5k.html'))
+    .pipe(rename('tm8k.html'))
     .pipe(gulp.dest(`./${WORKDIR}`))
 
     .pipe(gulp.src(`./${WORKDIR}/options_prod.html`))
@@ -116,7 +116,7 @@ gulp.task('package', gulp.series('backup-source-maps', function() {
       './dist/scripts/*.map',
       './dist/styles/*.scss',
       './dist/newtab_prod.html',
-      './dist/tm5k_prod.html',
+      './dist/tm8k_prod.html',
       './dist/options_prod.html',
       './dist/manifest_*',
       './dist/bundleReports',
@@ -124,7 +124,7 @@ gulp.task('package', gulp.series('backup-source-maps', function() {
   }
 
   return gulp.src(`./${WORKDIR}/**/**/*`)
-    .pipe(zip(`../releases/tm5k-${WORKDIR}-${DEV_ENV}-${process.env.COMMIT_HASH}.zip`))
+    .pipe(zip(`../releases/tm8k-${WORKDIR}-${DEV_ENV}-${process.env.COMMIT_HASH}.zip`))
     .pipe(gulp.dest(`./${WORKDIR}/`));
 }));
 

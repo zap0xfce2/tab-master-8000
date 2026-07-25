@@ -37,8 +37,7 @@ let basePrefs: Partial<PreferencesState> = {
   allTabs: true,
   resetSearchOnClick: true,
   tablePadding: 10,
-  errorTelemetry: false,
-  newTabMode: 'tm5k',
+  newTabMode: 'tm8k',
   newTabCustom: '',
   showTabGroupBadge: true,
 };
@@ -84,6 +83,20 @@ let prefsStore = <PreferencesStore>init({
         prefs[key] = prefsStore.defaultPrefs[key];
       }
     });
+
+    // Fork-Migration (TM5K -> TM8K): der Backfill oben ersetzt nur undefined-Keys
+    // und persistiert nie, ein umbenannter *Wert* braucht daher einen expliziten Rewrite.
+    if ((prefs.newTabMode as string) === 'tm5k') {
+      prefs.newTabMode = 'tm8k';
+
+      try {
+        await browser.storage.sync.set({
+          preferences: pick(prefs, Object.keys(basePrefs)),
+        });
+      } catch (e) {
+        sendError(e);
+      }
+    }
 
     prefsStore.syncPermissions();
     prefsStore.checkPermissions(prefs);

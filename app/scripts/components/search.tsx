@@ -128,14 +128,14 @@ class Search extends React.Component<SearchProps> {
                 className="settingBtn pull-right"
                 fa="thumbs-o-up"
                 data-place="bottom"
-                data-tip={p.s.width <= 841 ? utils.t('thankYouForInstallingTM5K') : null}>
-                {p.s.width <= 841 ? '' : utils.t('thankYouForInstallingTM5K')}
+                data-tip={p.s.width <= 841 ? utils.t('thankYouForInstallingTM8K') : null}>
+                {p.s.width <= 841 ? '' : utils.t('thankYouForInstallingTM8K')}
               </Btn> : null}
             {p.topLoad ? <Loading top={true} /> : null}
             {p.s.topNavButton === 'dlFavicons' && p.topLoad ?
               <div>
                 <p
-                  className="tm5k-info pull-right"
+                  className="tm8k-info pull-right"
                   style={{color: p.theme.darkBtnText, textShadow: `2px 2px ${p.theme.darkBtnTextShadow}`, position: 'relative', top: '2px', marginRight: '8px'}}>
                   {p.s.width <= 841 ? '' : utils.t('downloadingAndCachingFavicons')}
                 </p>

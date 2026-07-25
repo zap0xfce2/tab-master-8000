@@ -132,7 +132,7 @@ export interface ThemingState {
   themeHover?: number;
   themeLabel?: number;
   themeLabelValue?: string;
-  leftTab?: 'custom' | 'tm5k';
+  leftTab?: 'custom' | 'tm8k';
   rightTab?: 'color' | 'wallpaper';
   isNewTheme?: boolean;
   showCustomButtons?: boolean;
@@ -156,7 +156,7 @@ class Theming extends React.Component<ThemingProps, ThemingState> {
       themeHover: null,
       themeLabel: -1,
       themeLabelValue: '',
-      leftTab: this.props.savedThemes.length > 0 ? 'custom' : 'tm5k',
+      leftTab: this.props.savedThemes.length > 0 ? 'custom' : 'tm8k',
       rightTab: 'color',
       isNewTheme: true,
       showCustomButtons: false,
@@ -239,7 +239,7 @@ class Theming extends React.Component<ThemingProps, ThemingState> {
     let update = false;
     let newThemeLabel, newThemeIcon = 'floppy-disk';
 
-    if (leftTab === 'tm5k') {
+    if (leftTab === 'tm8k') {
       newThemeLabel = collapse ? utils.t('copy') : utils.t('copyTheme');
       newThemeIcon = 'copy3';
     } else if (isNewTheme) {
@@ -338,7 +338,7 @@ class Theming extends React.Component<ThemingProps, ThemingState> {
       rightTab: 'color'
     };
 
-    if (this.state.leftTab === 'tm5k') {
+    if (this.state.leftTab === 'tm8k') {
       stateUpdate.leftTab = 'custom';
     }
 
@@ -444,8 +444,8 @@ class Theming extends React.Component<ThemingProps, ThemingState> {
               <li className={css(styles.noPaddingStyle) + ` ${s.leftTab === 'custom' ? 'active' : ''}`}>
                 <a className={css(styles.tabLinkStyle)} onClick={this.handleCustomTabClick}>{utils.t('custom')}</a>
               </li>
-              <li className={css(styles.noPaddingStyle) + ` ${s.leftTab === 'tm5k' ? 'active' : ''}`}>
-                <a className={css(styles.tabLinkStyle)} onClick={() => this.setState({leftTab: 'tm5k'})}>{utils.t('tm5k')}</a>
+              <li className={css(styles.noPaddingStyle) + ` ${s.leftTab === 'tm8k' ? 'active' : ''}`}>
+                <a className={css(styles.tabLinkStyle)} onClick={() => this.setState({leftTab: 'tm8k'})}>{utils.t('tm8k')}</a>
               </li>
             </ul>
           </div>
@@ -515,7 +515,7 @@ class Theming extends React.Component<ThemingProps, ThemingState> {
                   );
                 }) : null}
                 </Row> : null}
-              {s.leftTab === 'tm5k' ?
+              {s.leftTab === 'tm8k' ?
                 <Row>
                   {map(this.standardThemes, (theme, i) => {
                   return (
@@ -559,7 +559,7 @@ class Theming extends React.Component<ThemingProps, ThemingState> {
                   <li className={css(styles.noPaddingStyle) + ` ${s.rightTab === 'color' ? 'active' : ''}`}>
                     <a className={css(styles.tabLinkStyle)} onClick={() => this.setState({rightTab: 'color'})}>{utils.t('colorScheme')}</a>
                   </li>
-                  {!s.isNewTheme && s.leftTab === 'custom' || s.leftTab === 'tm5k' && s.selectedTheme && s.selectedTheme !== undefined && s.selectedTheme.id !== 9000 ?
+                  {!s.isNewTheme && s.leftTab === 'custom' || s.leftTab === 'tm8k' && s.selectedTheme && s.selectedTheme !== undefined && s.selectedTheme.id !== 9000 ?
                     <li className={css(styles.noPaddingStyle) + ` ${s.rightTab === 'wallpaper' ? 'active' : ''}`}>
                       <a className={css(styles.tabLinkStyle)} onClick={() => this.setState({rightTab: 'wallpaper'})}>{utils.t('wallpaper')}</a>
                     </li> : null}

@@ -176,7 +176,7 @@ class ModalHandler extends React.Component<ModalHandlerProps> {
     }
 
     return (
-      <div className="modal-tm5k modal" style={overlayStyle}>
+      <div className="modal-tm8k modal" style={overlayStyle}>
         <ModalDefault
           clickOutside={!p.colorPickerOpen}
           onMaximize={this.handleMaximize}

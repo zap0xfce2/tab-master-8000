@@ -1,4 +1,4 @@
-Tab Master 5K replaces your New Tab page with a full-featured tabs, history, bookmarks, apps, extensions, and sessions manager.
+Tab Master 8000 replaces your New Tab page with a full-featured tabs, history, bookmarks, apps, extensions, and sessions manager.
 
 ### Features
 
@@ -41,6 +41,7 @@ This is a fork of [jaszhix/tab-master-5000-extension](https://github.com/jaszhix
 - **New global shortcut "Focus Search"** (`chrome.commands`): focuses the search field even when the New Tab page isn't the focused element, complementing the existing in-page `Ctrl+F`.
 - **Broader host permission (`<all_urls>`)** in the Chrome manifest, required at runtime by `captureVisibleTab` to support the screenshot feature above.
 - **No uninstall feedback survey.** The original opens a Google Forms survey ("Would you like to help improve this extension?") via `chrome.runtime.setUninstallURL` when the extension is uninstalled. This fork removes that call.
+- **No error telemetry.** The original ships an opt-in "Enable anonymous error reporting" preference that sends crash reports — including your browser, OS, IP, and extension settings — to the original author's Sentry project. This fork removes the Sentry integration and the preference entirely; no error data ever leaves your machine.
 
 ### Contributing
 - Install the project dependencies with ```npm install```.

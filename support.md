@@ -1,14 +1,14 @@
-If you have a question that can't be answered here, please open a new issue on either the [Chrome Web Store](https://chrome.google.com/webstore/detail/tab-master-5000-tab-swiss/mippmhcfjhliihkkdobllhpdnmmciaim) or TM5K's [Github](https://github.com/jaszhix/tab-master-5000-chrome-extension/issues) page.
+If you have a question that can't be answered here, please open a new issue on either the [Chrome Web Store](https://chrome.google.com/webstore/detail/tab-master-5000-tab-swiss/mippmhcfjhliihkkdobllhpdnmmciaim) or TM8K's [Github](https://github.com/zap0xfce2/tab-master-8000/issues) page.
 
 ### FAQ
 
-**How do I use Tab Master 5000 with another extension that overrides the New Tab page?**
+**How do I use Tab Master 8000 with another extension that overrides the New Tab page?**
 
-Make sure the extension you would like to override the New Tab page with is installed before TM5K. Then after installing TM5K, click the "tm" icon in the toolbar to open the UI.
+Make sure the extension you would like to override the New Tab page with is installed before TM8K. Then after installing TM8K, click the "tm" icon in the toolbar to open the UI.
 
-**How do I use Tab Master 5000 and keep the default New Tab page?**
+**How do I use Tab Master 8000 and keep the default New Tab page?**
 
-Open Settings, click the Preferences tab, and under "New Tab Override" select "Browser Default" from the dropdown. Due to technical differences out of TM5K's control, this option is not available in Firefox.
+Open Settings, click the Preferences tab, and under "New Tab Override" select "Browser Default" from the dropdown. Due to technical differences out of TM8K's control, this option is not available in Firefox.
 
 **How do I close all tabs from a specific domain?**
 
@@ -32,7 +32,7 @@ A bug was causing favicon cache data to be saved with session data, and this has
 
 **I am experiencing performance issues.**
 
-TM5K's impact on browser performance is regularly profiled with the newest versions of Chromium and Firefox. If you do experience issues though, try disabling screenshots, animations, session synchronization, or undoing of tab actions in Preferences. Enabling automatic tab discarding can also help improve performance on lower-end PCs.
+TM8K's impact on browser performance is regularly profiled with the newest versions of Chromium and Firefox. If you do experience issues though, try disabling screenshots, animations, session synchronization, or undoing of tab actions in Preferences. Enabling automatic tab discarding can also help improve performance on lower-end PCs.
 
 **The extension crashed.**
 

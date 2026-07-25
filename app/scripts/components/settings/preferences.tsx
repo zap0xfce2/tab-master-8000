@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 });
 
 const newTabOverrideOptions = [
-  {value: 'tm5k', label: 'Tab Master'},
+  {value: 'tm8k', label: 'Tab Master'},
   {value: 'default', label: utils.t('newTabOverrideOption1')},
   {value: 'custom', label: utils.t('newTabOverrideOption2')}
 ];
@@ -522,10 +522,6 @@ class Preferences extends React.Component<PreferencesComponentProps, Preferences
     obj[opt] = !prefs[opt];
 
     setPrefs(obj as PreferencesState);
-
-    if (opt === 'errorTelemetry') {
-      window.location.reload();
-    }
   }
 
   handleFaviconCachingChange = async (opt) => {
@@ -719,12 +715,6 @@ class Preferences extends React.Component<PreferencesComponentProps, Preferences
               on={p.prefs.alerts}
               label={utils.t('alerts')}
               data-tip={utils.t('alertsTip')}
-            />
-            <Toggle
-              onClick={() => this.handleClick('errorTelemetry')}
-              on={p.prefs.errorTelemetry}
-              label={utils.t('errorTelemetry')}
-              data-tip={utils.t('errorTelemetryTip')}
             />
           </Col>
           <Col size="6">

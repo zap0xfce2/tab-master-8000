@@ -39,7 +39,7 @@ class App extends React.Component<AppProps, GlobalState> {
       this.setState(newState, () => console.log('STATE: ', this.state));
     });
 
-    if (window.location.href.indexOf('tm5k.html') > -1) {
+    if (window.location.href.indexOf('tm8k.html') > -1) {
       document.title = 'Tab Master';
     }
   }

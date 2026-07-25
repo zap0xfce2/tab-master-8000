@@ -6,7 +6,6 @@ import {throttle, cloneDeep, isEqual, first, last, orderBy, uniqBy, without} fro
 globalThis.window = {};
 
 import * as uuid from 'uuid';
-import * as Sentry from '@sentry/browser';
 import {findIndex, find, each} from '@jaszhix/utils';
 import {eventState, state} from './state';
 import {timeout, sendMsg, sendError, chromeHandler, keyedDebounce, arrayBufferToBase64} from './utils';
@@ -202,11 +201,6 @@ class Bg {
 
     if (!s.init) {
       return await sendMsg({e, type: 'prefs'});
-    }
-
-    if (s.prefs.errorTelemetry) {
-      Sentry.init({dsn: 'https://e99b806ea1814d08a0d7be64cf931c81@sentry.io/1493513'});
-      Sentry.setExtra('TM5KVersion', browser.runtime.getManifest());
     }
 
     let bl = await browser.storage.sync.get('blacklist');
@@ -459,7 +453,7 @@ class Bg {
       let url;
 
       switch (this.state.prefs.newTabMode) {
-        case 'tm5k':
+        case 'tm8k':
           break;
 
         case 'default': {
@@ -879,7 +873,7 @@ class Bg {
     }
 
     await browser.tabs.create({
-      url: `${prefix}-extension://${id}/tm5k.html`,
+      url: `${prefix}-extension://${id}/tm8k.html`,
       active: true
     });
   }
