@@ -293,6 +293,18 @@
   "newTabOverrideOption2": {
     "message": "Personalizada"
   },
+  "favoritesBtn": {
+    "message": "Botón de favoritos"
+  },
+  "favoritesBtnTip": {
+    "message": "Controla qué página abre el botón de estrella en la esquina superior derecha."
+  },
+  "favoritesBtnOption1": {
+    "message": "Predeterminado"
+  },
+  "favoritesBtnOption2": {
+    "message": "URL personalizada"
+  },
   "enableContextMenu": {
     "message": "Habilitar menú contextual"
   },

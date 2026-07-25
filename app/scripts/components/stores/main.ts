@@ -5,7 +5,7 @@ import v from 'vquery';
 import mouseTrap from 'mousetrap';
 import {find, tryFn, each, filter} from '@jaszhix/utils';
 
-import {LINKED_EXTENSION_URL} from '../../shared/constants';
+import {getFavoritesUrl} from '../../shared/utils';
 import {saveSession} from './sessions';
 import {themeStore} from './theme';
 import state from './state';
@@ -325,7 +325,7 @@ export const handleMode = async (mode: ViewMode, stateUpdate: Partial<GlobalStat
 };
 
 export const openFavorites = () => {
-  chrome.tabs.create({url: LINKED_EXTENSION_URL});
+  chrome.tabs.create({url: getFavoritesUrl(state.get('prefs'))});
 };
 
 export const setKeyBindings = (s: GlobalState) => {

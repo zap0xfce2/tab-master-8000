@@ -255,6 +255,8 @@ declare global {
     newTabMode: 'tm8k' | 'default' | 'custom';
     newTabCustom: string;
     showTabGroupBadge: boolean;
+    favoritesBtnMode: 'default' | 'custom';
+    favoritesBtnCustom: string;
   }
 
   interface PermissionsState {

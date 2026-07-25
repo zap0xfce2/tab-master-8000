@@ -11,8 +11,8 @@ import {eventState, state} from './state';
 import {timeout, sendMsg, sendError, chromeHandler, keyedDebounce, arrayBufferToBase64} from './utils';
 
 import prefsStore from './prefs';
-import {isNewTab} from '../shared/utils';
-import {domainRegex, LINKED_EXTENSION_URL} from '../shared/constants';
+import {isNewTab, getFavoritesUrl} from '../shared/utils';
+import {domainRegex} from '../shared/constants';
 
 // Tab thumbnail capture (Chrome only, see captureActiveTabThumbnail).
 const THUMBNAIL_CAPTURE_DEBOUNCE = 500;
@@ -371,7 +371,7 @@ class Bg {
         }
 
         case 'openFavorites': {
-          await browser.tabs.create({url: LINKED_EXTENSION_URL, active: true});
+          await browser.tabs.create({url: getFavoritesUrl(this.state.prefs), active: true});
           break;
         }
 

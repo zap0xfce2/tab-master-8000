@@ -9,7 +9,7 @@ import Slider from 'rc-slider';
 import ReactTooltip from 'react-tooltip';
 
 import * as utils from '../stores/tileUtils';
-import {urlRegex} from '../../shared/constants';
+import {urlRegex, extensionUrlRegex} from '../../shared/constants';
 import state from '../stores/state';
 import {requestPermission, setPrefs, getBlackList, setBlackList, isValidDomain, getBytesInUse, restoreDefaultPrefs} from '../stores/main';
 
@@ -28,6 +28,11 @@ const newTabOverrideOptions = [
   {value: 'tm8k', label: 'Tab Master'},
   {value: 'default', label: utils.t('newTabOverrideOption1')},
   {value: 'custom', label: utils.t('newTabOverrideOption2')}
+];
+
+const favoritesBtnOptions = [
+  {value: 'default', label: utils.t('favoritesBtnOption1')},
+  {value: 'custom', label: utils.t('favoritesBtnOption2')}
 ];
 
 // TBD: Migrate commands to manifest.json
@@ -383,6 +388,8 @@ export interface PreferencesComponentState {
   aboutAddonsOpen?: boolean;
   newTabCustom?: string;
   newTabCustomValid?: boolean;
+  favoritesBtnCustom?: string;
+  favoritesBtnCustomValid?: boolean;
   commandsInfo: string;
   restoreDefaultsConfirm: boolean;
 }
@@ -401,6 +408,8 @@ class Preferences extends React.Component<PreferencesComponentProps, Preferences
       aboutAddonsOpen: false,
       newTabCustom: props.prefs.newTabCustom,
       newTabCustomValid: true,
+      favoritesBtnCustom: props.prefs.favoritesBtnCustom,
+      favoritesBtnCustomValid: true,
       commandsInfo: '',
       restoreDefaultsConfirm: false,
     }
@@ -571,6 +580,23 @@ class Preferences extends React.Component<PreferencesComponentProps, Preferences
     });
   }
 
+  handleFavoritesBtnModeChange = (e) => {
+    setPrefs({favoritesBtnMode: e.target.value});
+  }
+
+  handleFavoritesBtnCustomChange = (e) => {
+    let {value} = e.target;
+
+    let isValidURL = value.match(urlRegex) != null || value.match(extensionUrlRegex) != null;
+
+    this.setState({
+      favoritesBtnCustom: value.trim(),
+      favoritesBtnCustomValid: isValidURL,
+    }, async () => {
+      if (isValidURL) setPrefs({favoritesBtnCustom: value});
+    });
+  }
+
   render = () => {
     let s = this.state;
     let p = this.props;
@@ -622,6 +648,32 @@ class Preferences extends React.Component<PreferencesComponentProps, Preferences
                     <span
                       style={p.prefs.settingsMax ? {left: '98%'} : null}
                       className={`newTabOverrideValidation validation-${s.newTabCustomValid ? 'valid' : 'error'}-label`}>
+                      {' '}
+                    </span>
+                  : null}
+                </>
+              : null}
+            </Dropdown>
+            <Dropdown
+              theme={p.theme}
+              label={utils.t('favoritesBtn')}
+              options={favoritesBtnOptions}
+              value={p.prefs.favoritesBtnMode}
+              onChange={this.handleFavoritesBtnModeChange}
+              data-tip={utils.t('favoritesBtnTip')}>
+              {p.prefs.favoritesBtnMode === 'custom' ?
+                <>
+                  <input
+                    type="url"
+                    className="form-control settings"
+                    placeholder="https://"
+                    value={s.favoritesBtnCustom}
+                    onChange={this.handleFavoritesBtnCustomChange}
+                  />
+                  {s.favoritesBtnCustom.length ?
+                    <span
+                      style={p.prefs.settingsMax ? {left: '98%'} : null}
+                      className={`newTabOverrideValidation validation-${s.favoritesBtnCustomValid ? 'valid' : 'error'}-label`}>
                       {' '}
                     </span>
                   : null}

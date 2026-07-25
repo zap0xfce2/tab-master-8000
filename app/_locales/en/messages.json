@@ -295,6 +295,18 @@
   "newTabOverrideOption2": {
     "message": "Custom"
   },
+  "favoritesBtn": {
+    "message": "Favorites button"
+  },
+  "favoritesBtnTip": {
+    "message": "Controls which page the star button in the top right corner opens."
+  },
+  "favoritesBtnOption1": {
+    "message": "Default"
+  },
+  "favoritesBtnOption2": {
+    "message": "Custom URL"
+  },
   "enableContextMenu": {
     "message": "Enable context menu"
   },

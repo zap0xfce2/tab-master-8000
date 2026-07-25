@@ -101,7 +101,8 @@ class Search extends React.Component<SearchProps> {
               icon="star-full2"
               noIconPadding={true}
               data-place="bottom"
-              data-tip={utils.t('openFavorites')}
+              data-tip={p.s.prefs.favoritesBtnMode === 'custom' && p.s.prefs.favoritesBtnCustom ?
+                p.s.prefs.favoritesBtnCustom : utils.t('openFavorites')}
             />
             {p.s.topNavButton === 'newVersion' ?
               <Btn

@@ -295,6 +295,18 @@
   "newTabOverrideOption2": {
     "message": "自定义"
   },
+  "favoritesBtn": {
+    "message": "收藏夹按钮"
+  },
+  "favoritesBtnTip": {
+    "message": "控制右上角星形按钮打开的页面。"
+  },
+  "favoritesBtnOption1": {
+    "message": "默认"
+  },
+  "favoritesBtnOption2": {
+    "message": "自定义网址"
+  },
   "enableContextMenu": {
     "message": "启用右键菜单"
   },

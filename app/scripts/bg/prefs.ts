@@ -40,6 +40,8 @@ let basePrefs: Partial<PreferencesState> = {
   newTabMode: 'tm8k',
   newTabCustom: '',
   showTabGroupBadge: true,
+  favoritesBtnMode: 'default',
+  favoritesBtnCustom: '',
 };
 
 let baseThemePrefs: Partial<PreferencesState> = {
