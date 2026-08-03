@@ -532,43 +532,43 @@ class Bg {
           await prefsStore.restoreDefaultPrefs();
           return {prefs: prefsStore.getPrefs()};
         case 'getWindowId':
-          return sender.tab.windowId;
+          return sender.tab?.windowId;
         case 'getTabs':
           await sendMsg({
             windows: this.state.windows,
-            windowId: sender.tab.windowId,
+            windowId: sender.tab?.windowId,
             init: msg.init
           });
           break;
         case 'queryTabs':
-          await this.queryTabs(true, this.state.prefs, sender.tab.windowId);
+          await this.queryTabs(true, this.state.prefs, sender.tab?.windowId);
           break;
         case 'getSessions':
           if (!this.state.sessions.length) {
             await this.querySessions();
           } else {
-            await sendMsg({sessions: this.state.sessions, windowId: sender.tab.windowId});
+            await sendMsg({sessions: this.state.sessions, windowId: sender.tab?.windowId});
           }
 
           break;
         case 'queryBookmarks':
           if (msg.init || this.state.bookmarks.length === 0) {
-            await this.queryBookmarks(sender.tab.windowId);
+            await this.queryBookmarks(sender.tab?.windowId);
           } else {
-            await sendMsg({bookmarks: this.state.bookmarks, windowId: sender.tab.windowId});
+            await sendMsg({bookmarks: this.state.bookmarks, windowId: sender.tab?.windowId});
           }
 
           break;
         case 'queryHistory':
           if (msg.init || this.state.history.length === 0) {
-            await this.queryHistory(sender.tab.windowId);
+            await this.queryHistory(sender.tab?.windowId);
           } else {
-            await sendMsg({history: this.state.history, windowId: sender.tab.windowId});
+            await sendMsg({history: this.state.history, windowId: sender.tab?.windowId});
           }
 
           break;
         case 'queryExtensions':
-          await this.queryExtensions(sender.tab.windowId);
+          await this.queryExtensions(sender.tab?.windowId);
           break;
         case 'removeSingleWindow':
           this.removeSingleWindow(msg.windowId);
@@ -582,7 +582,7 @@ class Bg {
         }
 
         case 'getActions':
-          return {actions: this.state.actions, windowId: sender.tab.windowId};
+          return {actions: this.state.actions, windowId: sender.tab?.windowId};
         case 'syncPermissions':
           prefsStore.syncPermissions();
           break;

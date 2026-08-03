@@ -97,7 +97,7 @@ export const restoreDefaultPrefs = async () => {
 }
 
 export const queryExtensions = () => {
-  chrome.runtime.sendMessage(chrome.runtime.id, {method: 'queryExtensions'});
+  browser.runtime.sendMessage(chrome.runtime.id, {method: 'queryExtensions'}).catch((e) => console.log(e));
 };
 
 export const setMode = (mode: ViewMode, stateUpdate = {}) => {
@@ -183,19 +183,19 @@ const handleMessage = function(
 };
 
 export const queryTabs = (init = false) => {
-  chrome.runtime.sendMessage(chrome.runtime.id, {method: 'queryTabs', init});
+  browser.runtime.sendMessage(chrome.runtime.id, {method: 'queryTabs', init}).catch((e) => console.log(e));
 };
 
 export const queryBookmarks = (init = false) => {
-  chrome.runtime.sendMessage(chrome.runtime.id, {method: 'queryBookmarks', init});
+  browser.runtime.sendMessage(chrome.runtime.id, {method: 'queryBookmarks', init}).catch((e) => console.log(e));
 };
 
 export const queryHistory = (init = false) => {
-  chrome.runtime.sendMessage(chrome.runtime.id, {method: 'queryHistory', init});
+  browser.runtime.sendMessage(chrome.runtime.id, {method: 'queryHistory', init}).catch((e) => console.log(e));
 };
 
 export const undoAction = () => {
-  chrome.runtime.sendMessage(chrome.runtime.id, {method: 'undoAction', windowId: state.get('windowId')});
+  browser.runtime.sendMessage(chrome.runtime.id, {method: 'undoAction', windowId: state.get('windowId')}).catch((e) => console.log(e));
 };
 
 export const getWindowId = (): Promise<void> => {
@@ -208,11 +208,11 @@ export const getWindowId = (): Promise<void> => {
 };
 
 export const getSessions = () => {
-  chrome.runtime.sendMessage(chrome.runtime.id, {method: 'getSessions'});
+  browser.runtime.sendMessage(chrome.runtime.id, {method: 'getSessions'}).catch((e) => console.log(e));
 };
 
 export const getTabs = (init = false) => {
-  chrome.runtime.sendMessage(chrome.runtime.id, {method: 'getTabs', init});
+  browser.runtime.sendMessage(chrome.runtime.id, {method: 'getTabs', init}).catch((e) => console.log(e));
 };
 
 export const getActions = (): Promise<ActionRecord[]> => {
@@ -260,7 +260,7 @@ export const requestPermission = async (permission?: B.Manifest.OptionalPermissi
 }
 
 export const removeSingleWindow = (windowId: number) => {
-  chrome.runtime.sendMessage(chrome.runtime.id, {method: 'removeSingleWindow', windowId});
+  browser.runtime.sendMessage(chrome.runtime.id, {method: 'removeSingleWindow', windowId}).catch((e) => console.log(e));
 };
 
 export const init = () => {
