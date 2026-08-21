@@ -15,24 +15,19 @@ let basePrefs: Partial<PreferencesState> = {
   context: true,
   animations: true,
   duplicate: true,
-  screenshotBg: false,
   screenshotBgBlur: 3,
   screenshotBgOpacity: 10,
   faviconCaching: false,
   blacklist: true,
-  sidebar: true,
   sort: true,
   showViewMode: true,
   mode: 'tabs',
   format: 'tile',
-  installTime: Date.now(),
   actions: false,
   trackMostUsed: false,
   singleNewTab: true,
   closeOnActivate: true,
   keyboardShortcuts: true,
-  resolutionWarning: true,
-  syncedSession: true,
   tooltip: false,
   allTabs: true,
   resetSearchOnClick: true,
@@ -146,10 +141,6 @@ let prefsStore = <PreferencesStore>init({
 
   async restoreDefaultPrefs() {
     await prefsStore.setPrefs({...basePrefs, ...baseThemePrefs})
-  },
-
-  getPrefs() {
-    return prefsStore.prefs;
   },
 });
 

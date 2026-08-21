@@ -109,7 +109,7 @@ class Search extends React.Component<SearchProps> {
                 onClick={() => this.handleTopNavButtonClick(()=>chrome.runtime.reload())}
                 style={topNavButtonStyle}
                 className="settingBtn pull-right"
-                fa="rocket"
+                icon="rocket"
                 data-place="bottom"
                 data-tip={p.s.width <= 841 ? utils.t('newVersionAvailable') : null}>
                 {p.s.width <= 841 ? '' : utils.t('newVersionAvailable')}
@@ -127,7 +127,7 @@ class Search extends React.Component<SearchProps> {
                 onClick={() => this.handleTopNavButtonClick(() => this.openAbout())}
                 style={topNavButtonStyle}
                 className="settingBtn pull-right"
-                fa="thumbs-o-up"
+                icon="thumbs-up2"
                 data-place="bottom"
                 data-tip={p.s.width <= 841 ? utils.t('thankYouForInstallingTM8K') : null}>
                 {p.s.width <= 841 ? '' : utils.t('thankYouForInstallingTM8K')}

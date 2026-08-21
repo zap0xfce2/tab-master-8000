@@ -1,7 +1,5 @@
 import {browser} from 'webextension-polyfill-ts';
 
-export const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export const sendMsg = async (msg: Partial<BgMessage>): Promise<any> => {
   let response;
 

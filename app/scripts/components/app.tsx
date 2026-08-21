@@ -77,11 +77,6 @@ class App extends React.Component<AppProps, GlobalState> {
 
     state.set(stateUpdate);
 
-    if (s.prefs && s.prefs.screenshotBg) {
-      document.getElementById('bgImg').style.width = `${window.innerWidth + 30}px`;
-      document.getElementById('bgImg').style.height = `${window.innerHeight + 5}px`;
-    }
-
     v('#bgImg').css({
       width: window.innerWidth + 30,
       height: window.innerHeight + 5,

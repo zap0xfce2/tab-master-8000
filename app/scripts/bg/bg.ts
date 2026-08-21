@@ -8,7 +8,7 @@ globalThis.window = {};
 import * as uuid from 'uuid';
 import {findIndex, find, each} from '@jaszhix/utils';
 import {eventState, state} from './state';
-import {timeout, sendMsg, sendError, chromeHandler, keyedDebounce, arrayBufferToBase64} from './utils';
+import {sendMsg, sendError, chromeHandler, keyedDebounce, arrayBufferToBase64} from './utils';
 
 import prefsStore from './prefs';
 import {isNewTab, getFavoritesUrl} from '../shared/utils';
@@ -41,7 +41,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 let syncSession = (sessions: SessionState[], prefs: PreferencesState, windows: ChromeWindow[] = null) => {
   let allTabs = [];
 
-  if (typeof prefs.syncedSession !== 'undefined' && prefs.syncedSession && prefs.sessionsSync) {
+  if (prefs.sessionsSync) {
     let refSession = findIndex(sessions, session => session.id === prefs.currentSyncedSession);
 
     if (refSession === -1) {
@@ -529,10 +529,10 @@ class Bg {
           return {prefs: s.prefs};
         case 'setPrefs':
           await prefsStore.setPrefs(msg.obj);
-          return {prefs: prefsStore.getPrefs()};
+          return {prefs: prefsStore.prefs};
         case 'restoreDefaultPrefs':
           await prefsStore.restoreDefaultPrefs();
-          return {prefs: prefsStore.getPrefs()};
+          return {prefs: prefsStore.prefs};
         case 'getWindowId':
           return sender.tab?.windowId;
         case 'getTabs':
@@ -1006,7 +1006,7 @@ class Bg {
     if (chromeVersion === 1
       && e.url === 'about:blank'
       && recursion === 0) {
-      await timeout(0);
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
       let tab = await this.getSingleTab(e.id);
 

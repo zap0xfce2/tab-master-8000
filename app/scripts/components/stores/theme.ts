@@ -602,9 +602,6 @@ const themeStore = <ThemeStore>init({
       });
     });
   },
-  getSelectedTheme: () => {
-    return themeStore.theme;
-  },
   getThemeFields: (): ThemeField[] => {
     return [
       {themeKey: 'bodyText', label: 'Body Text', group: 'general'},

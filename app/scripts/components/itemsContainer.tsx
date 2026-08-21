@@ -2,24 +2,21 @@ import React from 'react';
 import {StyleSheet, css} from 'aphrodite';
 import {throttle} from 'lodash';
 import v from 'vquery';
+import loadable from '@loadable/component';
 import {each, map, tryFn} from '@jaszhix/utils';
 
 import state from './stores/state';
 import {queryTabs} from './stores/main';
 import {themeStore} from './stores/theme';
 
-import {whichToShow, AsyncComponent} from './utils';
+import {whichToShow} from './utils';
 import {isNewTab} from '../shared/utils';
 
 import {TileProps, TileState} from './tile'; // eslint-disable-line no-unused-vars
 import {TableProps, TableState} from './table'; // eslint-disable-line no-unused-vars
 
-let Tile = AsyncComponent({
-  loader: () => import(/* webpackChunkName: "tile" */ './tile')
-} as LoadableExport.Options<unknown, object>) as React.ComponentClass<TileProps, TileState>;
-let Table = AsyncComponent({
-  loader: () => import(/* webpackChunkName: "table" */ './table')
-} as LoadableExport.Options<unknown, object>) as React.ComponentClass<TableProps, TableState>;
+let Tile = loadable(() => import(/* webpackChunkName: "tile" */ './tile')) as React.ComponentClass<TileProps, TileState>;
+let Table = loadable(() => import(/* webpackChunkName: "table" */ './table')) as React.ComponentClass<TableProps, TableState>;
 
 interface ItemsContainerProps {
   s: GlobalState;

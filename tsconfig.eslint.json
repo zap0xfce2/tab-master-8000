@@ -5,7 +5,6 @@
     "app/**/**/**/*.ts",
     "app/**/**/**/*.tsx",
     "app/**/**/**/*.js",
-    "test/**/*.ts",
     "webpack.config.ts",
     "gulpfile.ts"
   ]

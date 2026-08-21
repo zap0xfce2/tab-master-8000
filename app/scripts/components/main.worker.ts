@@ -3,7 +3,6 @@ import * as uuid from 'uuid';
 import {assignIn, cloneDeep, merge, orderBy, uniqBy, flatten, last} from 'lodash';
 import {each, find, findIndex, filter, map, tryFn} from '@jaszhix/utils';
 
-import {includes} from './utils';
 import {isNewTab} from '../shared/utils';
 
 const defaultFavicon = '../images/file_paper_blank_document.png';
@@ -34,7 +33,7 @@ const hasDuplicates = (array) => {
 
 const getDuplicates = <T>(array: T[]): T[] => {
   return filter(array, (x, i) => {
-    return includes(array, x, i + 1);
+    return array.includes(x, i + 1);
   });
 };
 

@@ -43,22 +43,18 @@ console.log(`WORKDIR:`, WORKDIR);
 console.log(`========================================`);
 
 fs.ensureFileSync(manifestPath);
-fs.createReadStream(`./app/manifest_${DEV_ENV}${DEV_ENV === 'chrome' && ENV === 'development' ? '.dev' : ''}.json`)
+fs.createReadStream(`./app/manifest_${DEV_ENV}.json`)
   .pipe(fs.createWriteStream(manifestPath));
 
-const postcssPlugins = () => {
-  let processors = [
-    autoprefixer({
-      overrideBrowserslist: [
-        'ff >= 52',
-        'chrome >= 58',
-        'opera >= 23'
-      ]
-    })
-  ];
-
-  return processors;
-}
+const postcssPlugins = [
+  autoprefixer({
+    overrideBrowserslist: [
+      'ff >= 52',
+      'chrome >= 58',
+      'opera >= 23'
+    ]
+  })
+];
 
 let cssLoaders: webpack.RuleSetUse[] = [
   {
@@ -79,36 +75,18 @@ let cssLoaders: webpack.RuleSetUse[] = [
   },
 ];
 
-let scssLoaders: webpack.RuleSetUse[] = [
-  {
-    loader: 'css-loader',
-    options: {
-      sourceMap: true,
-      importLoaders: 1
-    },
-  },
-  {
-    loader: 'postcss-loader',
-    options: {
-      sourceMap: true,
-      postcssOptions: {
-        plugins: postcssPlugins
-      }
-    }
-  },
-  {
-    loader: 'sass-loader',
-    options: {
-      sourceMap: true,
-      sassOptions: {
-        outputStyle: PROD ? 'compressed' : 'expanded',
-        includePaths: [
-          path.join(__dirname, 'node_modules')
-        ],
-      }
+let scssLoaders: webpack.RuleSetUse[] = cssLoaders.concat({
+  loader: 'sass-loader',
+  options: {
+    sourceMap: true,
+    sassOptions: {
+      outputStyle: PROD ? 'compressed' : 'expanded',
+      includePaths: [
+        path.join(__dirname, 'node_modules')
+      ],
     }
   }
-];
+});
 
 if (!PROD) {
   cssLoaders = [<webpack.RuleSetUse>'style-loader'].concat(cssLoaders);

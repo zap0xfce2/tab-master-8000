@@ -20,14 +20,6 @@
     "tsconfigRootDir": "."
   },
   "plugins": ["@typescript-eslint", "react"],
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "rules": {
-        "prefer-const": 0
-      }
-    }
-  ],
   "settings": {
     "react": {
       "createClass": "createReactClass",

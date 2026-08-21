@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {assignIn, cloneDeep} from 'lodash';
 import onClickOutside from 'react-onclickoutside';
 import ReactTooltip from 'react-tooltip';
@@ -13,7 +12,6 @@ interface BtnProps {
   faStyle?: React.CSSProperties;
   className?: string;
   id?: string;
-  fa?: string;
   icon?: string;
   noIconPadding?: boolean;
 }
@@ -52,11 +50,10 @@ export class Btn extends React.Component<BtnProps, BtnState> {
 
   render = () => {
     let p = this.props;
-    let {className, style, faStyle, noIconPadding, fa, icon} = p;
-    let hasIcon = (fa || icon);
+    let {className, style, faStyle, noIconPadding, icon} = p;
     let iconClassName = '';
 
-    if (hasIcon && !noIconPadding) iconClassName += ' iconPadding';
+    if (icon && !noIconPadding) iconClassName += ' iconPadding';
 
     return (
       <button
@@ -68,12 +65,8 @@ export class Btn extends React.Component<BtnProps, BtnState> {
         className={className}
         style={style}>
         <div className="btnLabel">
-          {hasIcon ?
-            <i
-              className={`${iconClassName} ${fa ? 'fa fa-' + fa : ''}${icon ? ' icon-' + icon : ''}`}
-              style={faStyle}
-            /> : null}
-          {p.fa ? ' ' : null}
+          {icon ?
+            <i className={`${iconClassName} icon-${icon}`} style={faStyle} /> : null}
           {p.children}
         </div>
       </button>
@@ -82,8 +75,6 @@ export class Btn extends React.Component<BtnProps, BtnState> {
 }
 
 interface ColProps {
-  onContextMenu?: React.MouseEventHandler;
-  onDragEnter?: React.DragEventHandler;
   onMouseEnter?: (
     e: React.MouseEvent<Element, MouseEvent>,
     mouseKey: string,
@@ -104,10 +95,6 @@ interface ColProps {
 
 export class Col extends React.Component<ColProps> {
   ref: React.RefObject<HTMLDivElement> = React.createRef();
-
-  static propTypes = {
-    size: PropTypes.string.isRequired
-  };
 
   constructor(props) {
     super(props);
@@ -132,8 +119,6 @@ export class Col extends React.Component<ColProps> {
       <div
         ref={this.ref}
         data-tip={p['data-tip'] ? `<div style="max-width: 350px;">${p['data-tip']}</div>` : null}
-        onContextMenu={p.onContextMenu}
-        onDragEnter={p.onDragEnter}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
         onClick={p.onClick}
@@ -147,8 +132,6 @@ export class Col extends React.Component<ColProps> {
 }
 
 export interface RowProps {
-  onContextMenu?: React.MouseEventHandler;
-  onDragEnter?: React.DragEventHandler;
   onMouseEnter?: (
     e: React.MouseEvent<Element, MouseEvent>,
     mouseKey: string,
@@ -168,10 +151,6 @@ export interface RowProps {
 }
 
 export class Row extends React.Component<RowProps> {
-  static propTypes = {
-    fluid: PropTypes.bool,
-  };
-
   static defaultProps = {
     fluid: false,
     onMouseEnter: null,
@@ -196,8 +175,6 @@ export class Row extends React.Component<RowProps> {
     return (
       <div
         data-tip={p['data-tip'] ? `<div style="max-width: 350px;">${p['data-tip']}</div>` : null}
-        onContextMenu={p.onContextMenu}
-        onDragEnter={p.onDragEnter}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
         onClick={p.onClick}
@@ -234,8 +211,6 @@ export class Link extends React.Component<AnchorProps> {
 }
 
 interface ContainerProps {
-  onContextMenu?: React.MouseEventHandler;
-  onDragEnter?: React.DragEventHandler;
   onMouseEnter?: React.MouseEventHandler;
   onMouseLeave?: React.MouseEventHandler;
   onClick?: React.MouseEventHandler;
@@ -246,10 +221,6 @@ interface ContainerProps {
 }
 
 export class Container extends React.Component<ContainerProps> {
-  static propTypes = {
-    fluid: PropTypes.bool
-  };
-
   static defaultProps = {
     fluid: false
   };
@@ -260,7 +231,6 @@ export class Container extends React.Component<ContainerProps> {
     return (
       <div
         data-tip={p['data-tip'] ? `<div style="max-width: 350px;">${p['data-tip']}</div>` : null}
-        onContextMenu={p.onContextMenu} onDragEnter={p.onDragEnter}
         onMouseEnter={p.onMouseEnter} onMouseLeave={p.onMouseLeave}
         onClick={p.onClick}
         style={p.style}
@@ -278,13 +248,8 @@ interface PanelProps {
   headingStyle?: string;
   footerStyle?: string;
   bodyStyle?: string;
-  style?: React.CSSProperties;
   header?: React.ReactElement;
   footerLeft?: React.ReactElement;
-  footerRight?: React.ReactElement;
-  noBody?: boolean;
-  type?: 'flat' | 'default';
-  content?: boolean;
   draggable?: boolean;
   onDragEnd?: (e: React.DragEvent, i?: number) => void;
   onDragStart?: (e: React.DragEvent, i?: number) => void;
@@ -299,27 +264,14 @@ interface PanelProps {
 export class Panel extends React.Component<PanelProps> {
   static defaultProps = {
     className: null,
-    style: null,
     bodyStyle: null,
     header: null,
     footerLeft: null,
-    footerRight: null,
-    noBody: false,
-    type: 'flat',
-    content: false
   };
 
   render = () => {
     let p = this.props;
-    let defaultStyle = {};
 
-    if (p.content) {
-      assignIn(defaultStyle, {
-        boxShadow: p.type === 'default' ? '0 1px 3px rgba(0, 0, 0, 0), 0 1px 2px rgba(0, 0, 0, 0)' : 'initial'
-      });
-    }
-
-    assignIn(defaultStyle, cloneDeep(p.style));
     return (
       <div
         id={p.id}
@@ -327,8 +279,7 @@ export class Panel extends React.Component<PanelProps> {
         onDragEnd={p.onDragEnd}
         onDragStart={p.onDragStart}
         onDragOver={p.onDragOver}
-        className={`panel panel-${p.type}${p.className ? ' '+p.className : ''}`}
-        style={defaultStyle}
+        className={`panel panel-flat${p.className ? ' '+p.className : ''}`}
         onMouseEnter={p.onMouseEnter}
         onMouseLeave={p.onMouseLeave}
         onContextMenu={p.onContextMenu}>
@@ -337,19 +288,13 @@ export class Panel extends React.Component<PanelProps> {
             {p.header}
           </div> : null}
 
-        {!p.noBody ?
-          <div className={`${p.bodyStyle} panel-body"`} onClick={p.onBodyClick}>
-            {p.children}
-          </div> : null}
-        {p.noBody ? p.children : null}
-        {p.footerLeft || p.footerRight ?
+        <div className={`${p.bodyStyle} panel-body"`} onClick={p.onBodyClick}>
+          {p.children}
+        </div>
+        {p.footerLeft ?
           <div className={p.footerStyle + ' panel-footer panel-footer-transparent'} onClick={p.onFooterClick}>
             <div className="heading-elements">
               {p.footerLeft}
-              {p.footerRight ?
-                <div className="pull-right">
-                  {p.footerRight}
-                </div> : null}
             </div>
           </div> : null}
       </div>

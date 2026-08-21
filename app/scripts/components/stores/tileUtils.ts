@@ -1,6 +1,5 @@
 import _ from 'lodash';
-import Fuse from 'fuse.js';
-import {each, findIndex, filter, tryFn, map} from '@jaszhix/utils';
+import {each, findIndex, filter, map} from '@jaszhix/utils';
 
 import state from './state';
 import {handleMode, queryExtensions} from './main';
@@ -167,14 +166,6 @@ export const mute = (tab) => {
   chrome.tabs.update(tab.openTab ? tab.openTab : tab.id, {muted: !tab.mutedInfo.muted});
 };
 
-export const discard = (id: number) => {
-  if (typeof id === 'string') {
-    return;
-  }
-
-  chrome.tabs.discard(id);
-};
-
 export const checkDuplicateTabs = (tab: ChromeTab, cb?) => {
   if (!state.prefs.duplicate || state.prefs.mode !== 'tabs' || state.duplicateTabs.indexOf(tab.url) === -1) {
     if (cb) cb(false);
@@ -247,63 +238,6 @@ export const app = (tab: ChromeExtensionInfo, opt: string) => {
   }
 };
 
-export const checkFavicons = (tabs: ChromeTab[]) => {
-  window.tmWorker.postMessage({
-    msg: 'checkFavicons',
-    state: state.getStateWithoutAPI(),
-    tabs
-  });
-};
-
-const isStandardChromePage = function(chromePage: string): boolean {
-  return chromePage === 'DOWNLOADADS' || chromePage === 'EXTENSIONS' || chromePage === 'HISTORY' || chromePage === 'SETTINGS';
-};
-
-export const filterFavicons = (faviconUrl: string, tabUrl: string, mode: string): string => {
-  // Work around for Chrome favicon useage restriction.
-  // TODO: Check this behavior in FF, and clean this up.
-  let urlPart, chromePage;
-
-  if (faviconUrl !== undefined && faviconUrl && faviconUrl.length > 0 && faviconUrl.indexOf('chrome://theme/') !== -1) {
-    urlPart = faviconUrl.split('chrome://theme/')[1];
-    chromePage = urlPart.indexOf('/') !== -1 ? urlPart.split('/')[0] : urlPart;
-
-    if (isStandardChromePage(chromePage)) {
-      return `../images/${urlPart}.png`;
-    } else {
-      return `../images/IDR_SETTINGS_FAVICON@2x.png`;
-    }
-
-  } else if (tabUrl && tabUrl.indexOf('chrome://') !== -1 && mode === 'settings') {
-    urlPart = tabUrl.split('chrome://')[1];
-    chromePage = urlPart.indexOf('/') !== -1 ? urlPart.split('/')[0] : urlPart;
-
-    if (isStandardChromePage(chromePage)) {
-      return `../images/IDR_${chromePage.toUpperCase()}_FAVICON@2x.png`;
-    } else {
-      return `../images/IDR_SETTINGS_FAVICON@2x.png`;
-    }
-  } else {
-    return faviconUrl;
-  }
-};
-
-export const sort = (data: ChromeTab[]) => {
-  let result;
-
-  if (state.prefs.mode === 'tabs') {
-    let pinned = _.orderBy(filter(data, tab => tab.pinned === true), state.sort, state.direction);
-    let unpinned = _.orderBy(filter(data, tab => tab.pinned === false), state.sort, state.direction);
-    let concat = _.concat(pinned, unpinned);
-
-    result = _.orderBy(concat, ['pinned', state.sort], state.direction);
-  } else {
-    result = _.orderBy(data, [state.sort], [state.direction]);
-  }
-
-  return result;
-};
-
 export const formatBytes = (bytes: number, decimals: number): string => {
   if (bytes === 0) {
     return '0 Byte';
@@ -315,28 +249,6 @@ export const formatBytes = (bytes: number, decimals: number): string => {
   let i = Math.floor(Math.log(bytes) / Math.log(k));
 
   return (bytes / Math.pow(k, i)).toPrecision(dm) + ' ' + sizes[i];
-};
-
-export const searchChange = (query: string, tabs: ChromeTab[]): ChromeTab[] => {
-  let _tabs;
-
-  tryFn(() => {
-    let tabsSearch = new Fuse(tabs, {
-      keys: [{
-        name: 'title',
-        weight: 0.3
-      }, {
-        name: 'url',
-        weight: 0.7
-      }],
-      includeScore: true,
-      threshold: 0.4
-    });
-
-    _tabs = map(_.orderBy(tabsSearch.search(query.toLowerCase()), 'score'), item => item.item);
-  }, () => _tabs = tabs);
-
-  return _tabs;
 };
 
 export const t = (key: string): string => {

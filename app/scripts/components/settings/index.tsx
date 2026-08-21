@@ -1,5 +1,5 @@
 import React from 'react';
-import {AsyncComponent} from '../utils';
+import loadable from '@loadable/component';
 import state from '../stores/state';
 import {Row, Container} from '../bootstrap';
 
@@ -9,21 +9,11 @@ import {SessionsProps, SessionsState} from './sessions'; // eslint-disable-line 
 import {ThemingProps, ThemingState} from './theming'; // eslint-disable-line no-unused-vars
 import {AboutProps, AboutState} from './about'; // eslint-disable-line no-unused-vars
 
-let Preferences = AsyncComponent({
-  loader: () => import(/* webpackChunkName: "preferences" */ './preferences')
-} as LoadableExport.Options<unknown, object>) as React.ComponentClass<PreferencesComponentProps, PreferencesComponentState>;
-let Permissions = AsyncComponent({
-  loader: () => import(/* webpackChunkName: "permissions" */ './permissions')
-} as LoadableExport.Options<unknown, object>) as React.ComponentClass<PermissionsProps, PermissionsState>;
-let Sessions = AsyncComponent({
-  loader: () => import(/* webpackChunkName: "sessions" */ './sessions')
-} as LoadableExport.Options<unknown, object>) as React.ComponentClass<SessionsProps, SessionsState>;
-let Theming = AsyncComponent({
-  loader: () => import(/* webpackChunkName: "theming" */ './theming')
-} as LoadableExport.Options<unknown, object>) as React.ComponentClass<ThemingProps, ThemingState>;
-let About = AsyncComponent({
-  loader: () => import(/* webpackChunkName: "about" */ './about')
-} as LoadableExport.Options<unknown, object>) as React.ComponentClass<AboutProps, AboutState>;
+let Preferences = loadable(() => import(/* webpackChunkName: "preferences" */ './preferences')) as React.ComponentClass<PreferencesComponentProps, PreferencesComponentState>;
+let Permissions = loadable(() => import(/* webpackChunkName: "permissions" */ './permissions')) as React.ComponentClass<PermissionsProps, PermissionsState>;
+let Sessions = loadable(() => import(/* webpackChunkName: "sessions" */ './sessions')) as React.ComponentClass<SessionsProps, SessionsState>;
+let Theming = loadable(() => import(/* webpackChunkName: "theming" */ './theming')) as React.ComponentClass<ThemingProps, ThemingState>;
+let About = loadable(() => import(/* webpackChunkName: "about" */ './about')) as React.ComponentClass<AboutProps, AboutState>;
 
 interface SettingsProps {
   settings: string;

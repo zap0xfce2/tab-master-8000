@@ -7,11 +7,11 @@ import ReactTooltip from 'react-tooltip';
 import {browser} from 'webextension-polyfill-ts';
 import {assignIn} from 'lodash';
 import v from 'vquery';
+import loadable from '@loadable/component';
 import {each, filter, tryFn} from '@jaszhix/utils';
 
 import {handleMode, getWindowId, getSessions, getTabs, getActions, setPrefs, setFavicon} from './stores/main';
 import {themeStore, onThemeChange} from './stores/theme';
-import {AsyncComponent} from './utils';
 import Sidebar from './sidebar';
 import ItemsContainer from './itemsContainer';
 import Alert from './alert';
@@ -24,15 +24,9 @@ import type {PreferencesComponentProps, PreferencesComponentState} from './setti
 import type {ContextMenuProps, ContextMenuState} from './context'; // eslint-disable-line no-unused-vars
 import type {ModalHandlerProps} from './modal'; // eslint-disable-line no-unused-vars
 
-let Preferences = AsyncComponent({
-  loader: () => import(/* webpackChunkName: "preferences" */ './settings/preferences')
-} as LoadableExport.Options<unknown, object>) as React.ComponentClass<PreferencesComponentProps, PreferencesComponentState>;
-let ContextMenu = AsyncComponent({
-  loader: () => import(/* webpackChunkName: "context" */ './context')
-} as LoadableExport.Options<unknown, object>) as React.ComponentClass<ContextMenuProps, ContextMenuState>;
-let ModalHandler = AsyncComponent({
-  loader: () => import(/* webpackChunkName: "modal" */ './modal')
-} as LoadableExport.Options<unknown, object>) as React.ComponentClass<ModalHandlerProps>;
+let Preferences = loadable(() => import(/* webpackChunkName: "preferences" */ './settings/preferences')) as React.ComponentClass<PreferencesComponentProps, PreferencesComponentState>;
+let ContextMenu = loadable(() => import(/* webpackChunkName: "context" */ './context')) as React.ComponentClass<ContextMenuProps, ContextMenuState>;
+let ModalHandler = loadable(() => import(/* webpackChunkName: "modal" */ './modal')) as React.ComponentClass<ModalHandlerProps>;
 
 window.tmWorker = new tmWorker();
 

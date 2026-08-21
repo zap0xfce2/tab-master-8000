@@ -33,13 +33,6 @@ gulp.task('build-bg', function() {
     .pipe(gulp.dest('./app/build/'));
 });
 
-gulp.task('build', gulp.series('build-bg', function() {
-  return gulp.src('./app/scripts/components/index.tsx', {allowEmpty: true})
-    // @ts-ignore
-    .pipe(webpackStream(config))
-    .pipe(gulp.dest('./app/scripts/'));
-}));
-
 gulp.task('backup-source-maps', function() {
   return gulp.src(`./${WORKDIR}/scripts/*.map`)
     .pipe(gulp.dest(`./source_maps/${DEV_ENV}/${WORKDIR}/`));
@@ -134,5 +127,3 @@ gulp.task('watch', function() {
   gulp.watch('./app/scripts/bg/*.ts', gulp.parallel('build-bg'));
   gulp.watch('./app/scripts/shared/*.ts', gulp.parallel('build-bg'));
 });
-
-gulp.task('default', gulp.series('watch', (done) => done()));

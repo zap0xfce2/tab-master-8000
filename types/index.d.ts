@@ -21,22 +21,6 @@ declare global {
 
   type CSSInputTypes = StyleDeclarationValue | false | null | void;
 
-  interface Exports {
-    css(...styles: CSSInputTypes[]): string;
-    StyleSheet: StyleSheetStatic;
-    flushToStyleTag(): void;
-  }
-
-  interface SelectorHandler {
-    (selector: string, baseSelector: string, callback: (selector: string) => string):
-        | string
-        | null;
-  }
-
-  interface Extension {
-    selectorHandler?: SelectorHandler;
-  }
-
   interface StyleSheetStatic {
     /**
      * Create style sheet
@@ -48,12 +32,8 @@ declare global {
      * Rehydrate class names from server renderer
      */
     rehydrate(renderedClassNames: string[]): void;
-
-    extend(extensions: Extension[]): Exports;
   }
   // Aphrodite overrides ===
-
-  type NumberOrString = number | string;
 
   interface NodeModule {
     hot?: any;
@@ -225,25 +205,20 @@ declare global {
     context: boolean;
     animations: boolean;
     duplicate: boolean;
-    screenshotBg: boolean;
     screenshotBgBlur: number;
     screenshotBgOpacity: number;
     faviconCaching: boolean;
     blacklist: boolean;
-    sidebar: boolean;
     sort: boolean;
     showViewMode: boolean;
     mode: ViewMode;
     format: ViewFormat;
-    installTime: number;
     actions: boolean;
     sessionsSync: boolean;
     trackMostUsed: boolean;
     singleNewTab: boolean;
     closeOnActivate: boolean;
     keyboardShortcuts: boolean;
-    resolutionWarning: boolean;
-    syncedSession: boolean;
     currentSyncedSession: string;
     theme: number;
     wallpaper: string | number | null;

@@ -2,7 +2,7 @@ import {browser} from 'webextension-polyfill-ts';
 import _ from 'lodash';
 import * as uuid from 'uuid';
 import ReactTooltip from 'react-tooltip';
-import {each, findIndex, filter, cloneDeep} from '@jaszhix/utils';
+import {each, findIndex, filter} from '@jaszhix/utils';
 
 import state from './state';
 import {setPrefs, setAlert, syncPermissions} from './main';
@@ -247,7 +247,7 @@ export const saveSession = async ({tabs, label}: {tabs: ChromeTab[][], label: st
 
   each(tabs, (Window, wKey) => {
     each(Window, (tab, tKey) => {
-      tab = tabs[wKey][tKey] = cloneDeep(tab);
+      tab = tabs[wKey][tKey] = _.cloneDeep(tab);
 
       if (tab.favIconUrl != null && tab.favIconUrl && tab.favIconUrl.indexOf('data') > -1) {
         tab.favIconUrl = '';

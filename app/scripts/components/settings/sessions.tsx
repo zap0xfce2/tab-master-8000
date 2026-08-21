@@ -92,8 +92,6 @@ class Sessions extends React.Component<SessionsProps, SessionsState> {
     this.connectId = state.connect({
       favicons: this.handleSessionsState,
       allTabs: () => {
-        if (!state.prefs.syncedSession) return;
-
         getSessions();
         this.handleSessionsState();
       }
