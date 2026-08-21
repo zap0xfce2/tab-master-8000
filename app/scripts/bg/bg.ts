@@ -495,13 +495,15 @@ class Bg {
   }
 
   attachMessageListener = async (s) => {
-    browser.runtime.onMessage.addListener(async (msg: any, sender: B.Runtime.MessageSender) => {
+    browser.runtime.onMessage.addListener(chromeHandler(async (msg: any, sender: B.Runtime.MessageSender) => {
       console.log('Message from front-end: ', msg, sender);
 
       // requests from front-end javascripts
       switch (msg.method) {
         case 'close':
-          await browser.tabs.remove(sender.tab.id);
+          if (sender.tab) {
+            await browser.tabs.remove(sender.tab.id);
+          }
           break;
         case 'restoreWindow':
           for (let i = 0, len = msg.tabs.length; i < len; i++) {
@@ -594,7 +596,7 @@ class Bg {
       }
 
       return true;
-    });
+    }));
   }
 
   formatTabs = async (prefs, tabs) => {

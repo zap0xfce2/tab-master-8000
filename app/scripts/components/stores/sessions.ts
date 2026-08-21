@@ -39,7 +39,7 @@ export const restoreWindow = (session, windowIndex, chromeVersion = state.chrome
       tabs[z].index = z;
     }
 
-    chrome.runtime.sendMessage(chrome.runtime.id, {method: 'restoreWindow', windowId: Window.id, tabs: tabs});
+    browser.runtime.sendMessage(chrome.runtime.id, {method: 'restoreWindow', windowId: Window.id, tabs: tabs}).catch((e) => console.log(e));
   });
 };
 

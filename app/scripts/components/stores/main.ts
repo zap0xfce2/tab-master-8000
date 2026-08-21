@@ -90,7 +90,16 @@ export const setPrefs = async (obj: Partial<PreferencesState>) => {
 };
 
 export const restoreDefaultPrefs = async () => {
-  let {prefs} = await browser.runtime.sendMessage(chrome.runtime.id, {method: 'restoreDefaultPrefs'});
+  let response;
+
+  try {
+    response = await browser.runtime.sendMessage(chrome.runtime.id, {method: 'restoreDefaultPrefs'});
+  } catch (e) {
+    console.log(e);
+    return;
+  }
+
+  let {prefs} = response;
 
   state.set({prefs}, true);
   themeStore.selectTheme(prefs.theme);
@@ -231,11 +240,20 @@ export const getActions = (): Promise<ActionRecord[]> => {
 };
 
 export const syncPermissions = async () => {
-  await browser.runtime.sendMessage(chrome.runtime.id, {method: 'syncPermissions'});
+  try {
+    await browser.runtime.sendMessage(chrome.runtime.id, {method: 'syncPermissions'});
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const getPermissions = async (): Promise<B.Permissions.AnyPermissions> => {
-  return await browser.runtime.sendMessage(chrome.runtime.id, {method: 'getPermissions'});
+  try {
+    return await browser.runtime.sendMessage(chrome.runtime.id, {method: 'getPermissions'});
+  } catch (e) {
+    console.log(e);
+    return {origins: [], permissions: []};
+  }
 }
 
 export const requestPermission = async (permission?: B.Manifest.OptionalPermission, origin = ''): Promise<boolean> => {

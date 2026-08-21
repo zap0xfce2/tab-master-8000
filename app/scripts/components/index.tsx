@@ -51,7 +51,13 @@ const next = async (response) => {
 }
 
 const loadPrefs = async () => {
-  let response = await browser.runtime.sendMessage(chrome.runtime.id, {method: 'prefs'});
+  let response;
+
+  try {
+    response = await browser.runtime.sendMessage(chrome.runtime.id, {method: 'prefs'});
+  } catch (e) {
+    console.log(e);
+  }
 
   if (!response) {
     setTimeout(loadPrefs, 500);
