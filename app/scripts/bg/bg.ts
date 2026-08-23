@@ -289,59 +289,59 @@ class Bg {
 
       await this.checkNewTabOnCreated(tab);
 
-      this.createSingleItem(tab);
+      await this.createSingleItem(tab);
     }));
     /*
     Tabs removed
     */
-    chrome.tabs.onRemoved.addListener(chromeHandler((tabId, info) => {
+    chrome.tabs.onRemoved.addListener(chromeHandler(async (tabId, info) => {
       eventState.onRemoved = tabId;
       console.log('onRemoved: ', tabId, info);
-      this.removeSingleItem(tabId, info.windowId);
+      await this.removeSingleItem(tabId, info.windowId);
     }));
     /*
     Tabs activated
     */
-    chrome.tabs.onActivated.addListener(chromeHandler((info) => {
+    chrome.tabs.onActivated.addListener(chromeHandler(async (info) => {
       eventState.onActivated = info;
       console.log('onActivated: ', info);
-      this.handleActivation(info);
+      await this.handleActivation(info);
     }));
     /*
     Tabs updated
     */
-    chrome.tabs.onUpdated.addListener(chromeHandler((tabId, info) => {
+    chrome.tabs.onUpdated.addListener(chromeHandler(async (tabId, info) => {
       eventState.onUpdated = tabId;
       console.log('onUpdated: ', tabId, info);
-      this.updateSingleItem(tabId);
+      await this.updateSingleItem(tabId);
     }));
     /*
     Tabs moved
     */
-    chrome.tabs.onMoved.addListener(chromeHandler((tabId, info) => {
+    chrome.tabs.onMoved.addListener(chromeHandler(async (tabId, info) => {
       eventState.onMoved = tabId;
       console.log('onMoved: ', tabId, info);
-      this.moveSingleItem(tabId);
+      await this.moveSingleItem(tabId);
     }));
     /*
     Tabs attached
     */
-    chrome.tabs.onAttached.addListener(chromeHandler((tabId, info) => {
+    chrome.tabs.onAttached.addListener(chromeHandler(async (tabId, info) => {
       eventState.onAttached = tabId;
       console.log('onAttached: ', tabId, info);
       // FIXME:
       // @ts-ignore
       let tab = find(this.state.removed, (tab) => tab.id === tabId);
 
-      if (tab) this.createSingleItem(tab, info.newWindowId);
+      if (tab) await this.createSingleItem(tab, info.newWindowId);
     }));
     /*
     Tabs detached
     */
-    chrome.tabs.onDetached.addListener(chromeHandler((tabId, info) => {
+    chrome.tabs.onDetached.addListener(chromeHandler(async (tabId, info) => {
       eventState.onDetached = tabId;
       console.log('onDetached: ', tabId, info);
-      this.removeSingleItem(tabId, info.oldWindowId);
+      await this.removeSingleItem(tabId, info.oldWindowId);
     }));
     /*
     Tab groups changed (Chrome only, read-only - metadata refresh, membership changes already
@@ -1010,6 +1010,8 @@ class Bg {
 
       let tab = await this.getSingleTab(e.id);
 
+      if (!tab) return;
+
       await this.createSingleItem(tab, windowId, 1);
 
       return;
@@ -1143,6 +1145,9 @@ class Bg {
 
   updateSingleItem = async (id) => {
     let tab = await this.getSingleTab(id);
+
+    if (!tab) return;
+
     let refWindow = findIndex(this.state.windows, (win) => win.id === tab.windowId);
     let refTab: number, urlMatch: RegExpMatchArray;
 
@@ -1202,6 +1207,9 @@ class Bg {
 
   moveSingleItem = async (id) => {
     let tab = await this.getSingleTab(id);
+
+    if (!tab) return;
+
     let refWindow = findIndex(this.state.windows, win => win.id === tab.windowId);
     let refTab: number;
 

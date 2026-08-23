@@ -25,9 +25,9 @@ export const sendLog = async (...args: any[]) => {
 export const sendError = async (err: Error) => {
   if (!err) return;
 
-  if (process.env.NODE_ENV === 'production') return;
-
   console.error(err);
+
+  if (process.env.NODE_ENV === 'production') return;
 
   await sendMsg({type: 'error', e: {
     message: err.message,
