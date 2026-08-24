@@ -368,10 +368,18 @@ const processWindows = function(s, msg: Partial<WorkerMessage>) {
 
   // Prevent state being overriden from another window while session manager is in use
   if (!msg.modalOpen) {
+    let hasGroupFilter = stateUpdate.modeKey === 'tabs' && typeof s.groupFilter === 'number';
+
+    if (hasGroupFilter && !find(stateUpdate[stateUpdate.modeKey] as ChromeItem[], (item: ChromeItem) => item.groupId === s.groupFilter)) {
+      // Gespeicherte groupId gehört zu keiner mehr existierenden Gruppe (Neustart/Gruppe aufgelöst) - Filter zurücksetzen statt alle Tabs zu verstecken
+      hasGroupFilter = false;
+      stateUpdate.groupFilter = false;
+    }
+
     (stateUpdate[stateUpdate.modeKey] as ChromeItem[]) = filter((stateUpdate[stateUpdate.modeKey] as ChromeItem[]), function(item) {
       if (isNewTab(item.url)) return false;
 
-      if (stateUpdate.modeKey === 'tabs' && s.groupFilter) return item.groupId === s.groupFilter;
+      if (stateUpdate.modeKey === 'tabs' && hasGroupFilter) return item.groupId === s.groupFilter;
 
       return true;
     });
