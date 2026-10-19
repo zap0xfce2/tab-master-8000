@@ -91,7 +91,7 @@
     "file-loader": "^6.2.0",
     "fs-extra": "^9.1.0",
     "fuse.js": "^6.2.1",
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.1",
     "gulp-htmlclean": "^2.7.22",
     "gulp-imagemin": "^7.1.0",
     "gulp-rename": "^2.0.0",

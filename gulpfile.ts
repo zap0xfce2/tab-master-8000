@@ -59,7 +59,8 @@ gulp.task('copy', function() {
     patterns.push('!./app/scripts/components', '!./app/scripts/bg', '!./app/scripts/content');
   }
 
-  return gulp.src(patterns)
+  // gulp 5 liest per Default als UTF-8 und würde Bilder/Fonts beschädigen
+  return gulp.src(patterns, {encoding: false})
     .pipe(gulp.dest(`./${WORKDIR}/`));
 });
 
@@ -91,7 +92,7 @@ gulp.task('htmlmin', function() {
 });
 
 gulp.task('imgmin', function() {
-  return gulp.src(`./${WORKDIR}/images/*.{png,jpg}`)
+  return gulp.src(`./${WORKDIR}/images/*.{png,jpg}`, {encoding: false})
     .pipe(imagemin([
       imagemin.mozjpeg({quality: 70, progressive: false}),
       imagemin.optipng({optimizationLevel: 7}),
@@ -116,7 +117,7 @@ gulp.task('package', gulp.series('backup-source-maps', function() {
     ]);
   }
 
-  return gulp.src(`./${WORKDIR}/**/**/*`)
+  return gulp.src(`./${WORKDIR}/**/**/*`, {encoding: false})
     .pipe(zip(`../releases/tm8k-${WORKDIR}-${DEV_ENV}-${process.env.COMMIT_HASH}.zip`))
     .pipe(gulp.dest(`./${WORKDIR}/`));
 }));
