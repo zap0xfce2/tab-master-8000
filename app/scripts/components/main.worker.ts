@@ -324,8 +324,11 @@ const processWindows = function(s, msg: Partial<WorkerMessage>) {
     modeKey: 'tabs'
   };
 
+  // Laufende Suche überlebt Background-Updates, Sortierung soll dabei nicht zurückspringen
+  const isSearching = Boolean(s.search);
+
   if (s.prefs.mode === 'tabs') {
-    if (s.modeKey === 'tabs') {
+    if (s.modeKey === 'tabs' || isSearching) {
       stateUpdate.sort = s.sort;
       stateUpdate.direction = s.direction;
     } else {
@@ -351,7 +354,7 @@ const processWindows = function(s, msg: Partial<WorkerMessage>) {
   } else if (s.prefs.mode === 'sessions') {
     stateUpdate.modeKey = 'sessionTabs';
 
-    if (s.modeKey === 'sessionTabs') {
+    if (s.modeKey === 'sessionTabs' || isSearching) {
       stateUpdate.sort = s.sort;
       stateUpdate.direction = s.direction;
     } else {
@@ -383,7 +386,16 @@ const processWindows = function(s, msg: Partial<WorkerMessage>) {
 
       return true;
     });
-    checkFavicons(s, (stateUpdate[stateUpdate.modeKey] as ChromeItem[]), stateUpdate);
+
+    const listKey = stateUpdate.modeKey;
+
+    if (isSearching) {
+      searchChange(s.search, stateUpdate[listKey] as ChromeItem[]);
+      // Ohne modeKey-Wechsel greift der Such-Reset in root.tsx nicht
+      delete stateUpdate.modeKey;
+    }
+
+    checkFavicons(s, (stateUpdate[listKey] as ChromeItem[]), stateUpdate);
   } else {
     // @ts-ignore
     postMessage({stateUpdate});

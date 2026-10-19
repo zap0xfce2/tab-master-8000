@@ -100,6 +100,8 @@ class Root extends React.Component<RootProps, RootState> {
       }),
       state.connect({
         search: (partial) => {
+          browser.storage.local.set({search: partial.search});
+
           if (!partial.search) {
             handleMode(this.props.s.prefs.mode);
             return;
@@ -160,10 +162,14 @@ class Root extends React.Component<RootProps, RootState> {
 
   init = (p) => {
     getWindowId().then(async () => {
-      let stored = await browser.storage.local.get('groupFilter');
+      let stored = await browser.storage.local.get(['groupFilter', 'search']);
 
       if (typeof stored.groupFilter === 'number') {
         state.set({groupFilter: stored.groupFilter});
+      }
+
+      if (typeof stored.search === 'string' && stored.search) {
+        state.set({search: stored.search});
       }
 
       if (p.s.prefs.sessionsSync) getSessions();

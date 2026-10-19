@@ -1,0 +1,40 @@
+version: '3'
+
+silent: true
+
+vars:
+  # Ohne Git-Checkout bricht gulp dist ab, daher Fallback auf "local"
+  COMMIT_HASH:
+    sh: git rev-parse --short HEAD 2>/dev/null || echo local
+
+tasks:
+  default:
+    cmds:
+      - task: build
+
+  install:
+    desc: Abhängigkeiten installieren (nur wenn node_modules fehlt oder package-lock.json neuer ist)
+    sources:
+      - package-lock.json
+    generates:
+      - node_modules/.package-lock.json
+    cmds:
+      - npm ci --no-audit --no-fund
+
+  lint:
+    desc: ESLint und Typprüfung
+    deps: [install]
+    cmds:
+      - npm run lint
+      - npx tsc --noEmit
+
+  build:
+    desc: Produktions-Build für Chrome, Ergebnis-ZIP landet in releases/
+    deps: [install]
+    preconditions:
+      # Das mitgelieferte mozjpeg-Binary ist glibc-gelinkt, unter Alpine/musl braucht es gcompat
+      - sh: node_modules/mozjpeg/vendor/cjpeg -version
+        msg: "cjpeg läuft nicht. Unter Alpine einmalig ausführen: sudo apk add gcompat"
+    cmds:
+      - COMMIT_HASH={{.COMMIT_HASH}} npm run build-chrome
+      - 'echo "Fertig: releases/tm8k-dist-chrome-{{.COMMIT_HASH}}.zip (entpackt zum Testen in dist/)"'

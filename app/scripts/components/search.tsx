@@ -41,7 +41,13 @@ class Search extends React.Component<SearchProps> {
     state.set({sidebar: !this.props.s.sidebar});
   }
 
-  handleEnter = (e) => {
+  handleKeyDown = (e) => {
+    // Fokus abgeben, Suchbegriff bleibt bewusst stehen
+    if (e.key === 'Escape') {
+      this.ref.current.blur();
+      return;
+    }
+
     if (e.keyCode !== 13) {
       return;
     }
@@ -150,7 +156,7 @@ class Search extends React.Component<SearchProps> {
               className="form-control search-tabs"
               placeholder={`${utils.t('search')} ${utils.t(p.s.prefs.mode)}...`}
               onChange={this.handleSearch}
-              onKeyDown={(e) => this.handleEnter(e)}
+              onKeyDown={(e) => this.handleKeyDown(e)}
             />
             {p.s.search.length > 0 ?
               <span

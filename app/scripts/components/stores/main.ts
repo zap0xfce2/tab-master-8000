@@ -352,7 +352,7 @@ export const setKeyBindings = (s: GlobalState) => {
       undoAction();
     }
   });
-  mouseTrap.bind('ctrl+f', (e) => {
+  mouseTrap.bind(['ctrl+f', 'f'], (e) => {
     e.preventDefault();
     state.set({modal: {state: false, type: 'settings'}});
     state.trigger('focusSearchEntry');
